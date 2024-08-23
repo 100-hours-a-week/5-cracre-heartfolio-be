@@ -22,6 +22,7 @@ public class PortfolioServiceImpl implements PortfolioService {
 
     private final UserRepository userRepository;
 
+    private final R
     @Autowired
     private PortfolioRepository portfolioRepository;
 
