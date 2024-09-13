@@ -17,7 +17,7 @@ jobs:
 
       # 서브모듈의 파일을 resources 디렉토리에 복사
       - name: Copy submodule files to resources
-        run: cp -r secrets/* src/main/resources/
+        run: cp -r secrets/develop/* src/main/resources/
 
       # Gradle 실행권한 부여
       - name: Grant execute permission to gradlew
