@@ -25,7 +25,7 @@ public class GetStocksController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         String token = (String) request.getAttribute("token");
-        System.out.println(token);
+
         if (token == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
