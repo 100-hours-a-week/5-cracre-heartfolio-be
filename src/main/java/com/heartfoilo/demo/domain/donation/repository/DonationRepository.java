@@ -20,4 +20,6 @@ public interface DonationRepository extends JpaRepository<Donation, Long> {
             " left join fetch o.payment p" +
             " where o.orderUid = :orderUid")
     Optional<Donation> findOrderAndPayment(String orderUid);
+
+    Donation findByUserId(long userId);
 }
