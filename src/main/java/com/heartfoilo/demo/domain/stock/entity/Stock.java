@@ -34,4 +34,15 @@ public class Stock {
 
     @Column(name = "english_name", nullable = false)
     private String englishName;
+
+    @Builder
+    public Stock(String name, String sector, String symbol, String type, float earningRate, String englishName) {
+        this.name = name;
+        this.sector = sector;
+        this.symbol = symbol;
+        this.type = type;
+        this.earningRate = earningRate;
+        this.englishName = englishName;
+    }
+
 }
