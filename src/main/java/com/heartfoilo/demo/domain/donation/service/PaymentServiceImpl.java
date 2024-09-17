@@ -8,11 +8,14 @@ import com.heartfoilo.demo.domain.donation.repository.DonationRepository;
 import com.heartfoilo.demo.domain.donation.repository.PaymentRepository;
 import com.heartfoilo.demo.domain.invest.entity.Order;
 import com.heartfoilo.demo.domain.invest.repository.OrderRepository;
+import com.heartfoilo.demo.domain.portfolio.entity.Account;
+import com.heartfoilo.demo.domain.portfolio.repository.PortfolioRepository;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +32,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final DonationRepository donationRepository;
     private final PaymentRepository paymentRepository;
     private final IamportClient iamportClient;
-
+    private final PortfolioRepository portfolioRepository;
     @Override
     public RequestPayDto findRequestDto(String orderUid) {
         Donation donation = donationRepository.findOrderAndPaymentAndMember(orderUid).orElseThrow(() -> new IllegalArgumentException("주문이 없습니다."));
@@ -78,6 +81,11 @@ public class PaymentServiceImpl implements PaymentService {
                 throw new RuntimeException("결제금액 불일치");
 
             }
+            Long userId = donation.getUser().getId(); // 여기까지 왔으면 donation 금액 추가
+            Account account = portfolioRepository.findByUserId(userId);
+            account.ChangeDonationPayment(account.getDonationPayment() + price); // account에 기부금액 업데이트
+
+            portfolioRepository.save(account);
 
             donation.getPayment().changePaymentBySuccess(PaymentStatus.OK, iamportResponse.getResponse().getImpUid());
 
