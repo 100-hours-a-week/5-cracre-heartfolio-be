@@ -1,8 +1,6 @@
 package com.heartfoilo.demo.domain.ranking.api;
 
-import com.heartfoilo.demo.domain.ranking.dto.responseDto.RankingDonationResponseDto;
-import com.heartfoilo.demo.domain.ranking.dto.responseDto.RankingResponseDto;
-import com.heartfoilo.demo.domain.ranking.dto.responseDto.UserRankingResponseDto;
+import com.heartfoilo.demo.domain.ranking.dto.responseDto.*;
 import com.heartfoilo.demo.domain.ranking.service.RankService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -22,31 +20,45 @@ public class RankController {
     private final RankService rankService;
 
     @GetMapping("/month")
-    public ResponseEntity<List<RankingResponseDto>> getMonthlyRanking() {
-        List<RankingResponseDto> ranks = rankService.getMonthlyRanking();
+    public ResponseEntity<MonthlyRankResponseDto> getMonthlyRanking(HttpServletRequest request) {
+        String userStrId = (String) request.getAttribute("userId");
+        Long userId = null;
+        if (userStrId != null) {
+            userId = Long.parseLong(userStrId);
+        }
+
+        MonthlyRankResponseDto ranks = rankService.getMonthlyRanking(userId);
         return ResponseEntity.ok(ranks);
     }
 
     @GetMapping("/cumulativeRevenue")
-    public ResponseEntity<List<RankingResponseDto>> getCumulativeRanking() {
-        List<RankingResponseDto> ranks = rankService.getCumulativeRanking();
+    public ResponseEntity<CumulativeRankResponseDto> getCumulativeRanking(HttpServletRequest request) {
+        String userStrId = (String) request.getAttribute("userId");
+        Long userId = null;
+        if (userStrId != null) {
+            userId = Long.parseLong(userStrId);
+        }
+
+        CumulativeRankResponseDto ranks = rankService.getCumulativeRanking(userId);
         return ResponseEntity.ok(ranks);
     }
 
     @GetMapping("/donation")
-    public ResponseEntity<List<RankingDonationResponseDto>> getDonationRanking() {
-        List<RankingDonationResponseDto> ranks = rankService.getDonationRanking();
+    public ResponseEntity<DonationRankResponseDto> getDonationRanking(HttpServletRequest request) {
+        String userStrId = (String) request.getAttribute("userId");
+        Long userId = null;
+        if (userStrId != null) {
+            userId = Long.parseLong(userStrId);
+        }
+
+        DonationRankResponseDto ranks = rankService.getDonationRanking(userId);
         return ResponseEntity.ok(ranks);
     }
 
     //사용자 순위
-    @GetMapping("/user")
-    public ResponseEntity<UserRankingResponseDto> getUserRanking(HttpServletRequest request) {
-        String userStrId = (String) request.getAttribute("userId");
-        if (userStrId == null) {
-            return ResponseEntity.ok(new UserRankingResponseDto(null, null, null));
-        }
-        Long userId = Long.parseLong(userStrId);
-        return ResponseEntity.ok(rankService.getUserRanking(userId));
-    }
+//    @GetMapping("/user")
+//    public ResponseEntity<UserRankingResponseDto> getUserRanking(HttpServletRequest request) {
+//
+//        return ResponseEntity.ok(rankService.getUserRanking(userId));
+//    }
 }

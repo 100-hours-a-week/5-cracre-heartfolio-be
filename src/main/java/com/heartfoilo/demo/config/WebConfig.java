@@ -30,7 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(heartfolioInterceptor)
 
-                .addPathPatterns("/api/stock/favorites/**", "/api/stock/order/**","/api/portfolio/**","/api/invest/**"); // Interceptor가 적용될 경로를 지정
+                .addPathPatterns("/api/stock/favorites/**", "/api/stock/order/**","/api/portfolio/**","/api/invest/**","/api/rank/**"); // Interceptor가 적용될 경로를 지정
 
     }
 

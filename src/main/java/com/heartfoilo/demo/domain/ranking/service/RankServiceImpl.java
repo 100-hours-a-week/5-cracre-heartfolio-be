@@ -1,9 +1,7 @@
 package com.heartfoilo.demo.domain.ranking.service;
 
 import com.heartfoilo.demo.domain.ranking.constant.ErrorMessage;
-import com.heartfoilo.demo.domain.ranking.dto.responseDto.RankingDonationResponseDto;
-import com.heartfoilo.demo.domain.ranking.dto.responseDto.RankingResponseDto;
-import com.heartfoilo.demo.domain.ranking.dto.responseDto.UserRankingResponseDto;
+import com.heartfoilo.demo.domain.ranking.dto.responseDto.*;
 import com.heartfoilo.demo.domain.ranking.entity.Ranking;
 import com.heartfoilo.demo.domain.ranking.repository.RankingRepository;
 import com.heartfoilo.demo.domain.user.repository.UserRepository;
@@ -23,57 +21,59 @@ public class RankServiceImpl implements RankService {
     private final UserRepository userRepository;
 
     @Override
-    public List<RankingResponseDto> getMonthlyRanking() {
+    public MonthlyRankResponseDto getMonthlyRanking(Long userId) {
+        Integer monthlyRank = (userId == null) ? -1 : rankingRepository.findUserRankByMonthlyReturn(userId).orElse(-1);
+
         List<Ranking> ranks = rankingRepository.findTop10ByOrderByMonthlyReturnDesc();
         if (ranks.isEmpty()) {
-            return Collections.emptyList();
+            return new MonthlyRankResponseDto(monthlyRank, Collections.emptyList());
         }
-        return ranks.stream()
+
+        List<RankingResponseDto> rankingResponseDtos = ranks.stream()
                 .map(rank -> new RankingResponseDto(
                         rank.getUser().getProfileImageUrl(),
                         rank.getUser().getName(),
                         rank.getMonthlyReturn()
                 ))
                 .collect(Collectors.toList());
+        return new MonthlyRankResponseDto(monthlyRank, rankingResponseDtos);
     }
 
     @Override
-    public List<RankingResponseDto> getCumulativeRanking() {
+    public CumulativeRankResponseDto getCumulativeRanking(Long userId) {
+        Integer CumulativeRank = (userId == null) ? -1 : rankingRepository.findUserRankBySumReturn(userId).orElse(-1);
+
         List<Ranking> ranks = rankingRepository.findTop10ByOrderBySumReturnDesc();
         if (ranks.isEmpty()) {
-            return Collections.emptyList();
+            return new CumulativeRankResponseDto(CumulativeRank, Collections.emptyList());
         }
-        return ranks.stream()
+        List<RankingResponseDto> rankingResponseDtos = ranks.stream()
                 .map(rank -> new RankingResponseDto(
                         rank.getUser().getProfileImageUrl(),
                         rank.getUser().getName(),
                         rank.getSumReturn()
                 ))
                 .collect(Collectors.toList());
+
+        return new CumulativeRankResponseDto(CumulativeRank, rankingResponseDtos);
     }
 
     @Override
-    public List<RankingDonationResponseDto> getDonationRanking() {
+    public DonationRankResponseDto getDonationRanking(Long userId) {
+        Integer DonationRank = (userId == null) ? -1 : rankingRepository.findUserRankByDonation(userId).orElse(-1);
+
         List<Ranking> ranks = rankingRepository.findTop10ByOrderByDonationDesc();
         if (ranks.isEmpty()) {
-            return Collections.emptyList();
+            return new DonationRankResponseDto(DonationRank, Collections.emptyList());
         }
-        return ranks.stream()
+        List<RankingDonationResponseDto> donationRankResponseDtos = ranks.stream()
                 .map(rank -> new RankingDonationResponseDto(
                         rank.getUser().getProfileImageUrl(),
                         rank.getUser().getName(),
                         rank.getDonation()
                 ))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public UserRankingResponseDto getUserRanking(Long userId) {
-        Integer monthlyRank = rankingRepository.findUserRankByMonthlyReturn(userId).orElse(-1);
-        Integer sumRank = rankingRepository.findUserRankBySumReturn(userId).orElse(-1);
-        Integer donationRank = rankingRepository.findUserRankByDonation(userId).orElse(-1);
-
-        return new UserRankingResponseDto(monthlyRank, sumRank, donationRank);
+        return new DonationRankResponseDto(DonationRank, donationRankResponseDtos);
     }
     
 }
