@@ -37,10 +37,8 @@ public class StockInfoServiceImpl implements StockInfoService {
 
 
         // stockId로 Stock을 조회
-        Stock stock = stockRepository.findById(stockId);
-        if (stock == null) {
-            throw new StockNotFoundException("Stock with ID " + stockId + " not found");
-        }
+        Stock stock = stockRepository.findById(stockId)
+                .orElseThrow(()-> new StockNotFoundException("Stock with ID " + stockId + " not found"));
 
 
         // symbol과 name 값을 가져옴
@@ -75,10 +73,9 @@ public class StockInfoServiceImpl implements StockInfoService {
 
 
         // stockId로 Stock을 조회
-        Stock stock = stockRepository.findById(stockId);
-        if (stock == null) {
-            throw new StockNotFoundException("Stock with ID " + stockId + " not found");
-        }
+        Stock stock = stockRepository.findById(stockId)
+                .orElseThrow(()-> new StockNotFoundException("Stock with ID " + stockId + " not found"));
+
 
 
         // symbol과 name 값을 가져옴

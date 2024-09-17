@@ -32,7 +32,8 @@ public class KakaoService{
     private String clientId;
     private final String KAUTH_TOKEN_URL_HOST;
     private final String KAUTH_USER_URL_HOST;
-
+    @Value("${kakao.redirect_uri}")
+    private String kakaoRedirectUri;
     @Autowired
     private AuthTokensGenerator authTokensGenerator;
     @Autowired
@@ -81,7 +82,7 @@ public class KakaoService{
                         .path("/oauth/token")
                         .queryParam("grant_type", "authorization_code")
                         .queryParam("client_id", clientId)
-                        .queryParam("redirect_uri", "https://heartfolio.site/oauth")
+                        .queryParam("redirect_uri", kakaoRedirectUri)
                         .queryParam("code", code)
                         .build(true))
                 .header(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())
@@ -115,20 +116,25 @@ public class KakaoService{
         // 닉네임은 랜덤으로 부여해야 함
         Random random = new Random();  // Random 클래스의 인스턴스를 생성합니다.
 
+        String profileImageUrl = kakaoUserInfoResponseDto.getKakaoAccount().getProfile().getProfileImageUrl();
         Optional<User> kakaoUser = userRepository.findById(id);
 
         String nickname = "사용자" + random.nextInt(99999) + 1;
         if (!kakaoUser.isPresent()) {
-            User newUser = new User(id,name, nickname);
+            User newUser = new User(id,name, nickname,profileImageUrl);
             Account account = new Account(newUser,10000000L,0L);
             userRepository.save(newUser); // email, name, nickname 세 개로 가입 진행
             portfolioRepository.save(account);
         }
         else{
+            Optional<User> optionalUser = userRepository.findById(id);
+            User user = optionalUser.get();
+            User newUser = new User(user.getId(), user.getName(),user.getNickname(),profileImageUrl);
+            userRepository.save(newUser);
             nickname = kakaoUser.get().getNickname();
         }
         KakaoTokenResponseDto token=authTokensGenerator.generate(id);
-        return new LoginResponse(id,nickname,token);// 여기서부터 다시할것
+        return new LoginResponse(id,nickname,token,profileImageUrl);// 여기서부터 다시할것
     }
 
 

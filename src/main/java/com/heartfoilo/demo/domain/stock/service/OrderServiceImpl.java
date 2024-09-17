@@ -39,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<StockSearchResponseDto> getStockSearch(String keyword) {
-        List<Stock> stocks = stockRepository.findByNameContainingOrSymbolContaining(keyword, keyword);
+        List<Stock> stocks = stockRepository.searchStock(keyword);
 
         return stocks.stream()
                 .map(stock -> new StockSearchResponseDto(

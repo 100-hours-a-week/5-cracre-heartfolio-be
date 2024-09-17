@@ -29,6 +29,7 @@ application.yml
 .springBeans
 .sts4-cache
 bin/
+/src/test/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 

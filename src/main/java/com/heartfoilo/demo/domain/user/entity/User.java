@@ -22,10 +22,8 @@ public class User {
     private String nickname;
 
 
-    public User(String name,String nickname){
-        this.name = name;
-        this.nickname = nickname;
-    }
+    @Column(nullable = true, length = 255)
+    private String profileImageUrl;
 
 
 
