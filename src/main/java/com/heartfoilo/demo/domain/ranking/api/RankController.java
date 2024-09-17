@@ -54,11 +54,4 @@ public class RankController {
         DonationRankResponseDto ranks = rankService.getDonationRanking(userId);
         return ResponseEntity.ok(ranks);
     }
-
-    //사용자 순위
-//    @GetMapping("/user")
-//    public ResponseEntity<UserRankingResponseDto> getUserRanking(HttpServletRequest request) {
-//
-//        return ResponseEntity.ok(rankService.getUserRanking(userId));
-//    }
 }
