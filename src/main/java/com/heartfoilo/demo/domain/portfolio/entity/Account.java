@@ -28,9 +28,19 @@ public class Account {
     @Column(name = "total_purchase", nullable = false)
     private Long totalPurchase;
 
-    public Account(User newUser, long cash, long totalPurchase) {
+    @Column(name = "donation_payment", nullable = false)
+    private long donationPayment;
+    public Account(User newUser, long cash, long totalPurchase,long donationPayment) {
         this.user = newUser;
         this.cash = cash;
         this.totalPurchase = totalPurchase;
+        this.donationPayment = donationPayment;
+    }
+
+    public Account(User newUser, long l, long l1) {
+    }
+
+    public void ChangeDonationPayment(long donationPayment){
+        this.donationPayment = donationPayment;
     }
 }
