@@ -37,7 +37,10 @@ public class Account {
         this.donationPayment = donationPayment;
     }
 
-    public Account(User newUser, long l, long l1) {
+    public Account(User newUser, long cash, long totalPurchase) {
+        this.user = newUser;
+        this.cash = cash;
+        this.totalPurchase = totalPurchase;
     }
 
     public void ChangeDonationPayment(long donationPayment){
