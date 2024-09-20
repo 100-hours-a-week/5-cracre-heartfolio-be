@@ -35,7 +35,6 @@ public class ApiSearchNewsService {
 
     public NewsResponseDto searchNews(String query) {
         if(redisUtil.hasDailyNews(query)){
-            System.out.println("news 재사용");
             return redisUtil.getDailyNewsTemplate(query).getNewsResponseDto();
         }
         String encodedQuery;
