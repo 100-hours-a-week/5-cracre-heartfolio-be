@@ -52,13 +52,13 @@ public class LocalHomeController {
     }// JSON 형식으로 response 변경
 
     @PostMapping("/order")
-    public ResponseEntity<Map<String, String>> makeDonation(HttpServletRequest request, Long cash){ // TODO : Long cash 말고 받는 형식 변경
+    public ResponseEntity<Map<String, String>> makeDonation(HttpServletRequest request, @RequestBody Map<String, Long> requestBody){ // TODO : Long cash 말고 받는 형식 변경
         String userId = (String) request.getAttribute("userId");
         if (userId == null){
             throw new AuthorizationServiceException("User ID is missing");
         }
         User user = userRepository.findById(Long.valueOf(userId)).orElseThrow(() -> new RuntimeException("User not found"));
-
+        Long cash = requestBody.get("price");
         Donation donation = donationService.makeDontaion(user,cash);
 
 
