@@ -23,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 
 @RequiredArgsConstructor
 @Controller
+@CrossOrigin("*")
 @RequestMapping("/api/donation")
 public class LocalHomeController {
     private final UserRepository userRepository;
