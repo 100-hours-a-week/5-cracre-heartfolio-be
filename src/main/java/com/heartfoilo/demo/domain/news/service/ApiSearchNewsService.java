@@ -60,7 +60,11 @@ public class ApiSearchNewsService {
 
             List<NewsItemDto> filteredItems = responseDto.getItems().stream()
                     .filter(item -> containsKorean(item.getTitle()))
-                    .peek(item -> item.setFormattedPubDate(item.getPubDate())) // 날짜 형식 변경
+                    .peek(item -> {
+                        item.setTitle(cleanText(item.getTitle())); // 제목에서 불필요한 태그 제거
+                        item.setDescription(cleanText(item.getDescription())); // 설명에서 불필요한 태그 제거
+                        item.setFormattedPubDate(item.getPubDate()); // 날짜 형식 변경
+                    })
                     .collect(Collectors.toList());
 
             responseDto.setItems(filteredItems);
@@ -94,6 +98,14 @@ public class ApiSearchNewsService {
         } finally {
             con.disconnect();
         }
+    }
+
+    private String cleanText(String text) {
+        if (text == null) {
+            return "";
+        }
+        // HTML 태그와 특수문자 제거
+        return text.replaceAll("<[^>]*>", "").replace("&quot;", "\"").replace("&apos;", "'").replace("&amp;", "&");
     }
 
     private static HttpURLConnection connect(String apiUrl) {
