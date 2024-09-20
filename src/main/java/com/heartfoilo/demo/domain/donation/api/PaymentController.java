@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
+@CrossOrigin("*")
 @RequestMapping("/api/donation")
 public class PaymentController {
 
