@@ -3,30 +3,41 @@ package com.heartfoilo.demo.domain.news.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heartfoilo.demo.domain.news.dto.responseDto.NewsItemDto;
 import com.heartfoilo.demo.domain.news.dto.responseDto.NewsResponseDto;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
-
-import java.io.*;
+import com.heartfoilo.demo.dto.DailyNewsDto;
+import com.heartfoilo.demo.util.RedisUtil;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ApiSearchNewsService {
 
     @Value("${newsapi.client-id}")
     private String CLIENT_ID; // 애플리케이션 클라이언트 아이디
     @Value("${newsapi.client-secret}")
     private String CLIENT_SECRET; // 애플리케이션 클라이언트 시크릿
-
+    private final RedisUtil redisUtil;
 
     public NewsResponseDto searchNews(String query) {
+        if(redisUtil.hasDailyNews(query)){
+            System.out.println("news 재사용");
+            return redisUtil.getDailyNewsTemplate(query).getNewsResponseDto();
+        }
         String encodedQuery;
         try {
             encodedQuery = URLEncoder.encode(query, "UTF-8");
@@ -53,7 +64,7 @@ public class ApiSearchNewsService {
                     .collect(Collectors.toList());
 
             responseDto.setItems(filteredItems);
-
+            redisUtil.setDailyNewsTemplate(query, DailyNewsDto.builder().date(LocalDate.now()).newsResponseDto(responseDto).build());
             return responseDto;
         } catch (IOException e) {
             throw new RuntimeException("JSON 파싱 실패", e);
