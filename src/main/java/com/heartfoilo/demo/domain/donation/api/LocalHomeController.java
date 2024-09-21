@@ -20,63 +20,51 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Controller
+@CrossOrigin("*")
 @RequestMapping("/api/donation")
 public class LocalHomeController {
     private final UserRepository userRepository;
     private final DonationService donationService;
-    @GetMapping
-    public String home() {
-        return "home";
-    }
 
-    @GetMapping("/order")
-    public String order(@RequestParam(name = "message", required = false) String message,
-                        @RequestParam(name = "orderUid", required = false) String id,
-                        @RequestParam(name = "cash", required = false) long price,
-                        Model model) {
 
-        model.addAttribute("message", message);
-        model.addAttribute("orderUid", id);
-        model.addAttribute("cash",price);
-        return "order";
-    }
+//    @GetMapping("/order")
+//    public String order(@RequestParam(name = "message", required = false) String message,
+//                        @RequestParam(name = "orderUid", required = false) String id,
+//                        @RequestParam(name = "cash", required = false) long price,
+//                        Model model) {
+//
+//        model.addAttribute("message", message);
+//        model.addAttribute("orderUid", id);
+//        model.addAttribute("cash",price);
+//        return "order";
+//    }
     private final PaymentService paymentService;
 
-    @GetMapping("/payment/{id}")
-    public String paymentPage(@PathVariable(name = "id", required = false) String id, Model model){
+    @GetMapping("/payment/{orderUid}")
+    public ResponseEntity<RequestPayDto> paymentPage(@PathVariable(name = "orderUid", required = false) String id){
         RequestPayDto requestDto = paymentService.findRequestDto(id);
-        model.addAttribute("requestDto",requestDto);
-        return "payment";
-    }
+        return ResponseEntity.ok(requestDto);
+    }// JSON 형식으로 response 변경
 
-    @GetMapping("/success-payment")
-    public String successPaymentPage() {
-        return "success-payment";
-    }
-
-    @GetMapping("/fail-payment")
-    public String failPaymentPage() {
-        return "fail-payment";
-    }
     @PostMapping("/order")
-    public String makeDonation(HttpServletRequest request, Long cash){
+    public ResponseEntity<Map<String, String>> makeDonation(HttpServletRequest request, @RequestBody Map<String, Long> requestBody){ // TODO : Long cash 말고 받는 형식 변경
         String userId = (String) request.getAttribute("userId");
         if (userId == null){
             throw new AuthorizationServiceException("User ID is missing");
         }
         User user = userRepository.findById(Long.valueOf(userId)).orElseThrow(() -> new RuntimeException("User not found"));
-
+        Long cash = requestBody.get("price");
         Donation donation = donationService.makeDontaion(user,cash);
-        String message = "주문 실패";
-        if (donation != null) {
-            message = "주문 성공";
-        }
-        String encode = URLEncoder.encode(message, StandardCharsets.UTF_8);
 
-        return "redirect:/order?message="+encode+"&orderUid="+donation.getOrderUid()+"&cash="+cash;
+
+        Map<String, String> response = new HashMap<>();
+        response.put("orderUid", donation.getOrderUid());
+        return ResponseEntity.ok(response);
 
     }
 
