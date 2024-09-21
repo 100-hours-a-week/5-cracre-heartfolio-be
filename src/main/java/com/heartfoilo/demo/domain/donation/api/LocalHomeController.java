@@ -59,7 +59,6 @@ public class LocalHomeController {
         }
         User user = userRepository.findById(Long.valueOf(userId)).orElseThrow(() -> new RuntimeException("User not found"));
         Long cash = requestBody.get("price");
-        System.out.println(cash);
         Donation donation = donationService.makeDontaion(user,cash);
 
 
