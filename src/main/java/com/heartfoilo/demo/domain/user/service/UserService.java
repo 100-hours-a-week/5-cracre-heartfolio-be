@@ -6,4 +6,6 @@ public interface UserService {
 
     public ResponseEntity<?> getMypageInfo(long userId);
 
+    public ResponseEntity<?> fixNickname(long userId,String nickname);
+
 }

@@ -24,8 +24,6 @@ public class UserServiceImpl implements UserService {
     private final PortfolioRepository portfolioRepository;
     private final DonationRepository donationRepository;
     @Override
-
-
     public ResponseEntity<?> getMypageInfo(long userId){
 
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("유저 정보를 찾을 수 없습니다."));
@@ -47,5 +45,15 @@ public class UserServiceImpl implements UserService {
 
 
         return ResponseEntity.ok(donation);
+    }
+
+    @Override
+    public ResponseEntity<?> fixNickname(long userId,String nickname){
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("유저 정보를 찾을 수 없습니다."));
+        user.fixInfo(userId,nickname);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(user);
+
     }
 }
