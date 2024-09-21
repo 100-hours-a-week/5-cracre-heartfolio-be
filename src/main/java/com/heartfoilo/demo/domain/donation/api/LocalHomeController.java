@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,6 @@ public class LocalHomeController {
     public String paymentPage(@PathVariable(name = "id", required = false) String id, Model model){
         RequestPayDto requestDto = paymentService.findRequestDto(id);
         model.addAttribute("requestDto",requestDto);
-        System.out.println(requestDto);
         return "payment";
     }
 
@@ -63,13 +63,10 @@ public class LocalHomeController {
     }
     @PostMapping("/order")
     public String makeDonation(HttpServletRequest request, Long cash){
-//        String userId = (String) request.getAttribute("userId");
-//        Map<String, Object> response = new HashMap<>();
-//        if (userId == null){
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-//                    .body("userId is null");
-//        }
-        String userId = "3674718789"; // TODO: 하드코딩 해제 필요
+        String userId = (String) request.getAttribute("userId");
+        if (userId == null){
+            throw new AuthorizationServiceException("User ID is missing");
+        }
         User user = userRepository.findById(Long.valueOf(userId)).orElseThrow(() -> new RuntimeException("User not found"));
 
         Donation donation = donationService.makeDontaion(user,cash);
