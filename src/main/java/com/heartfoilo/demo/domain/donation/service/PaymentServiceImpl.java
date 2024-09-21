@@ -89,6 +89,13 @@ public class PaymentServiceImpl implements PaymentService {
 
             donation.getPayment().changePaymentBySuccess(PaymentStatus.OK, iamportResponse.getResponse().getImpUid());
 
+            if (price == 1000L){
+                account.ChangeCash(account.getCash() + 1200000);
+            }
+            else if(price == 2000L){
+                account.ChangeCash(account.getCash() + 2400000);
+            }
+
             return iamportResponse;
 
         } catch (IamportResponseException e) {
