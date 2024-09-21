@@ -1,24 +1,31 @@
 package com.heartfoilo.demo.util;
 
 import com.heartfoilo.demo.domain.webSocket.dto.StockSocketInfoDto;
+import com.heartfoilo.demo.dto.DailyNewsDto;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class RedisUtil {
 
     private final RedisTemplate<String, Object> redisTemplate;
     private final RedisTemplate<String, Object> redisBlackListTemplate;
     private final RedisTemplate<String, Object> stockInfoTemplate;
-    public RedisUtil(RedisTemplate<String, Object> redisTemplate,
-                     RedisTemplate<String, Object> redisBlackListTemplate,
-                     RedisTemplate<String, Object> stockInfoTemplate) {
-        this.redisTemplate = redisTemplate;
-        this.redisBlackListTemplate = redisBlackListTemplate;
-        this.stockInfoTemplate = stockInfoTemplate;
-    }
+    private final RedisTemplate<String, Object> dailyNewsTemplate;
+
+//    public RedisUtil(RedisTemplate<String, Object> redisTemplate,
+//                     RedisTemplate<String, Object> redisBlackListTemplate,
+//                     RedisTemplate<String, Object> stockInfoTemplate) {
+//        this.redisTemplate = redisTemplate;
+//        this.redisBlackListTemplate = redisBlackListTemplate;
+//        this.stockInfoTemplate = stockInfoTemplate;
+//    }
 //    @Value("${jwt.expmin}")
     private int expMin;
 
@@ -68,6 +75,23 @@ public class RedisUtil {
 
     public boolean hasKeyStockInfo(String key) {
         return Boolean.TRUE.equals(stockInfoTemplate.hasKey(key));
+    }
+
+    public void setDailyNewsTemplate(String key, Object o) {
+        key = "news" + key;
+        dailyNewsTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(o.getClass()));
+        dailyNewsTemplate.opsForValue().set(key, o, 1, TimeUnit.DAYS);
+    }
+
+    public DailyNewsDto getDailyNewsTemplate(String key) {
+        key = "news" + key;
+        dailyNewsTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(DailyNewsDto.class));
+        return (DailyNewsDto) dailyNewsTemplate.opsForValue().get(key);
+    }
+
+    public boolean hasDailyNews(String key) {
+        return Boolean.TRUE.equals(dailyNewsTemplate.hasKey("news" + key)) && getDailyNewsTemplate(key).getDate().equals(
+            LocalDate.now());
     }
 
 
