@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     @Override
 
 
-    public ResponseEntity<?> getInfo(long userId){
+    public ResponseEntity<?> getMypageInfo(long userId){
 
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("유저 정보를 찾을 수 없습니다."));
         Map<String,Object> info = new HashMap<>();

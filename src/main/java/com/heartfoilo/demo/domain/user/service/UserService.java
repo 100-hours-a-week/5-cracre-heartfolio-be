@@ -4,6 +4,6 @@ import org.springframework.http.ResponseEntity;
 @Service
 public interface UserService {
 
-    public ResponseEntity<?> getInfo(long userId);
+    public ResponseEntity<?> getMypageInfo(long userId);
 
 }

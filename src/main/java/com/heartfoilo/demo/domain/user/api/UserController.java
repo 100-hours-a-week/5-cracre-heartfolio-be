@@ -30,7 +30,6 @@ public class UserController {
     @GetMapping("/info")
     public ResponseEntity<?> getUserInfo(HttpServletRequest request){
         String userStrId = (String) request.getAttribute("userId");
-        System.out.println(userStrId);
         if (userStrId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 빈 Map 반환
         }
