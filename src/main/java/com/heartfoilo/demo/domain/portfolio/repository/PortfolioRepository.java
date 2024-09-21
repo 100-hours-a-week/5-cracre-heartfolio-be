@@ -13,4 +13,5 @@ public interface PortfolioRepository extends JpaRepository<Account, Long> {
 
     @Query("SELECT a FROM Account a JOIN a.user u WHERE u.id = :userId")
     Account findByUserId(@Param("userId") long userId);
+
 }

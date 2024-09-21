@@ -26,6 +26,10 @@ public class User {
     private String profileImageUrl;
 
 
+    public void fixInfo(Long id,String nickname){
+        this.id = id;
+        this.nickname = nickname;
+    }
 
 
 
