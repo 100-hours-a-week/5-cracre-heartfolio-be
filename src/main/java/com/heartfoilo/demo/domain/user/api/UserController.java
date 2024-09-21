@@ -34,7 +34,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 빈 Map 반환
         }
 
-        return userService.getInfo(Long.valueOf(userStrId));
+        return userService.getMypageInfo(Long.valueOf(userStrId));
 
 
 
