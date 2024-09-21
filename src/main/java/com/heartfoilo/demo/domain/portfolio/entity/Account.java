@@ -43,6 +43,9 @@ public class Account {
         this.totalPurchase = totalPurchase;
     }
 
+    public void ChangeCash(long cash){
+        this.cash = cash;
+    }
     public void ChangeDonationPayment(long donationPayment){
         this.donationPayment = donationPayment;
     }
