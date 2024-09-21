@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserService {
     private final DonationRepository donationRepository;
     @Override
 
+
     public ResponseEntity<?> getInfo(long userId){
 
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("유저 정보를 찾을 수 없습니다."));
