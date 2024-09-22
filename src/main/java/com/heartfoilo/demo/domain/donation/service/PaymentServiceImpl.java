@@ -85,9 +85,11 @@ public class PaymentServiceImpl implements PaymentService {
             Account account = portfolioRepository.findByUserId(userId);
             if (price == 1000L){
                 account.ChangeCash(1200000);
+                account.ChangeDonationPayment(1000L);
             }
             else if(price == 2000L){
                 account.ChangeCash(2400000);
+                account.ChangeDonationPayment(2000L);
             }
 
             portfolioRepository.save(account);
