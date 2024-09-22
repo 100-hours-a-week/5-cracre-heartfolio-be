@@ -5,8 +5,9 @@ import com.heartfoilo.demo.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Data
+
 @Entity
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -45,6 +46,16 @@ public class Account {
 
     public void ChangeCash(long cash){
         this.cash = cash;
+    }
+    public void ChangeCash(Long additionalCash) {
+        if (this.cash == null) {
+            this.cash = 0L;  // null일 경우 초기값을 설정
+        }
+        this.cash += additionalCash;
+    }
+    public void BuyStock(Long totalAmount){
+        this.cash -= totalAmount;
+        this.totalPurchase += totalAmount;
     }
     public void ChangeDonationPayment(long donationPayment){
         this.donationPayment = donationPayment;

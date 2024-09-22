@@ -62,12 +62,12 @@ public class InvestServiceImpl implements InvestService{
 
         TotalAssets totalAssets = totalAssetsRepository.findByStockIdAndUserId(stockId,userId);
         if (totalAssets == null) {
-            totalAssets = new TotalAssets();
-            totalAssets.setStock(stock);
-            totalAssets.setUser(user);
-            totalAssets.setTotalQuantity(quantity);
-            totalAssets.setPurchaseAvgPrice(price);
-            totalAssetsRepository.save(totalAssets);
+            totalAssets = TotalAssets.builder()
+                    .stock(stock)
+                    .user(user)
+                    .totalQuantity(quantity)
+                    .purchaseAvgPrice(price)
+                    .build(); // Setter 사용 지양 -> builder로 변경
             Order orders = createOrder(userId, "buy", quantity, (int) price,stockId); // 조치완료
 
             investRepository.save(orders);
@@ -77,8 +77,8 @@ public class InvestServiceImpl implements InvestService{
             Long cash = account.getCash();
             Long totalPurchase = account.getTotalPurchase();
             if (cash >= quantity * price) {
-                account.setCash(cash - (quantity * price));
-                account.setTotalPurchase(totalPurchase + (quantity * price));
+                account.ChangeCash(quantity * price); // 여기서 cash , totalPurchase 모두 변경 가능
+
             }
             else{
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잔액이 부족합니다.");
@@ -92,8 +92,9 @@ public class InvestServiceImpl implements InvestService{
 
         nowAvgPrice = ((nowQuantity * nowAvgPrice) + (quantity * price)) / (nowQuantity + quantity);
         nowQuantity = nowQuantity + quantity ;
-        totalAssets.setTotalQuantity(nowQuantity);
-        totalAssets.setPurchaseAvgPrice(nowAvgPrice);
+        totalAssets.ChangeQuantity(nowQuantity);
+        totalAssets.ChangeAvgPrice(nowAvgPrice);
+
 
 
         // orders 엔티티에 있는 내역 업데이트.
@@ -107,8 +108,7 @@ public class InvestServiceImpl implements InvestService{
         Long cash = account.getCash();
         Long totalPurchase = account.getTotalPurchase();
         if (cash >= quantity * price) {
-            account.setCash(cash - (quantity * price));
-            account.setTotalPurchase(totalPurchase + (quantity * price));
+            account.ChangeCash(quantity * price);
         }
         else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잔액이 부족합니다.");
@@ -144,8 +144,8 @@ public class InvestServiceImpl implements InvestService{
         Long cash = account.getCash(); // 현재 잔액 조회
         Long totalPurchase = account.getTotalPurchase();
 
-        account.setCash(cash + (quantity * price));
-        account.setTotalPurchase(totalPurchase - (quantity * price));
+        account.ChangeCash(quantity * price);
+
 
         portfolioRepository.save(account);
         if (nowQuantity == 0) {
@@ -153,7 +153,7 @@ public class InvestServiceImpl implements InvestService{
             return ResponseEntity.ok("자산이 전부 판매되어 삭제되었습니다.");
         } else {
             // total_quantity가 0이 아니면 업데이트 후 저장
-            totalAssets.setTotalQuantity(nowQuantity); // quantity 변경
+            totalAssets.ChangeQuantity(nowQuantity); // quantity 변경
             totalAssetsRepository.save(totalAssets); // 항목들 변경해주고 save
             return ResponseEntity.ok("Sell order successfully processed and total assets updated.");
         }

@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -30,4 +30,13 @@ public class TotalAssets {
 
     @Column(name = "purchase_avg_price", nullable = false)
     private Long purchaseAvgPrice;
+
+    public void ChangeQuantity(Long totalQuantity){
+        this.totalQuantity = totalQuantity;
+    }
+    public void ChangeAvgPrice(Long purchaseAvgPrice){
+        this.purchaseAvgPrice = purchaseAvgPrice;
+    }
+
+
 }
