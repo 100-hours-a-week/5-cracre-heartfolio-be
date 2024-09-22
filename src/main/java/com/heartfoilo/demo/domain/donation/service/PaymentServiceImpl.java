@@ -83,18 +83,19 @@ public class PaymentServiceImpl implements PaymentService {
             }
             Long userId = donation.getUser().getId(); // 여기까지 왔으면 donation 금액 추가
             Account account = portfolioRepository.findByUserId(userId);
-            account.ChangeDonationPayment(account.getDonationPayment() + price); // account에 기부금액 업데이트
+            if (price == 1000L){
+                account.ChangeCash(1200000);
+            }
+            else if(price == 2000L){
+                account.ChangeCash(2400000);
+            }
 
             portfolioRepository.save(account);
 
             donation.getPayment().changePaymentBySuccess(PaymentStatus.OK, iamportResponse.getResponse().getImpUid());
 
-            if (price == 1000L){
-                account.ChangeCash(account.getCash() + 1200000);
-            }
-            else if(price == 2000L){
-                account.ChangeCash(account.getCash() + 2400000);
-            }
+
+
 
             return iamportResponse;
 
