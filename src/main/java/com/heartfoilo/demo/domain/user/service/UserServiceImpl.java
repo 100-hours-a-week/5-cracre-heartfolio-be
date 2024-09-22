@@ -37,14 +37,10 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException("Account not exist");
         }
         info.put("cash",account.getCash());
-        Donation donation = donationRepository.findByUserId(userId);
-        if (donation == null){
-            throw new EntityNotFoundException("Donation information not exist");
-        }
-        // info.put("donation",donation.get) TODO: 여기 donation 기부금 합산 어덯게 할지 고민
+        info.put("donation",account.getDonationPayment());
 
 
-        return ResponseEntity.ok(donation);
+        return ResponseEntity.ok(info);
     }
 
     @Override
