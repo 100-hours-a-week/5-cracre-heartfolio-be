@@ -77,7 +77,7 @@ public class InvestServiceImpl implements InvestService{
             Long cash = account.getCash();
             Long totalPurchase = account.getTotalPurchase();
             if (cash >= quantity * price) {
-                account.ChangeCash(quantity * price); // 여기서 cash , totalPurchase 모두 변경 가능
+                account.ChangeCash(-(quantity * price)); // 여기서 cash , totalPurchase 모두 변경 가능
 
             }
             else{
