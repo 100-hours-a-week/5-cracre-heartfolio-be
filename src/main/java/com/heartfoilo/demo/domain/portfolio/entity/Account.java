@@ -44,9 +44,7 @@ public class Account {
         this.totalPurchase = totalPurchase;
     }
 
-    public void ChangeCash(long cash){
-        this.cash = cash;
-    }
+
     public void ChangeCash(Long additionalCash) {
         if (this.cash == null) {
             this.cash = 0L;  // null일 경우 초기값을 설정
