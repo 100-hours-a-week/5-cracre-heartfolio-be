@@ -1,10 +1,12 @@
 package com.heartfoilo.demo.config;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
@@ -14,24 +16,20 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @EnableRedisRepositories
 public class RedisConfig {
 
-    @Value("${spring.redis.data.host}")
-    private String host;
-
-    @Value("${spring.redis.data.port}")
-    private int port;
-
-    @Value("${spring.redis.data.password}")
-    private String password;
-
+    @Value("${spring.redis.data.cluster.nodes}")
+    private List<String> clusterNodes;
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
-        config.setHostName(host);
-        config.setPort(port);
-        config.setPassword(password);
-        return new LettuceConnectionFactory(config);
+        return new LettuceConnectionFactory(redisClusterConfiguration());
     }
+
+    @Bean
+    @ConfigurationProperties(prefix = "spring.redis.data")
+    public RedisClusterConfiguration redisClusterConfiguration() {
+        return new RedisClusterConfiguration(clusterNodes);
+    }
+
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
