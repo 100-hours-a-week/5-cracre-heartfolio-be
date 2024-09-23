@@ -59,9 +59,14 @@ public class UserController {
 
     }
 
-//    @PostMapping("/logout")
-//    public ResponseEntity<?> logout(HttpServletRequest request){
-//
-//    }
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request){
+        String userStrId = (String) request.getAttribute("userId");
+        if (userStrId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 빈 Map 반환
+        }
+
+        return userService.removeRefreshToken(Long.valueOf(userStrId));
+    }
 
 }

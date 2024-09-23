@@ -7,6 +7,8 @@ import com.heartfoilo.demo.domain.portfolio.repository.PortfolioRepository;
 import com.heartfoilo.demo.domain.user.entity.User;
 import com.heartfoilo.demo.domain.user.repository.UserRepository;
 import com.heartfoilo.demo.global.exception.UserNotFoundException;
+import com.heartfoilo.demo.login.Entity.RefreshToken;
+import com.heartfoilo.demo.login.Repository.RefreshTokenRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PortfolioRepository portfolioRepository;
     private final DonationRepository donationRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     @Override
     public ResponseEntity<?> getMypageInfo(long userId){
 
@@ -55,6 +58,15 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         return ResponseEntity.ok(user);
+
+    }
+    @Override
+    public ResponseEntity<?> removeRefreshToken(long userId){
+        refreshTokenRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Token not exists"));
+
+        refreshTokenRepository.deleteByUserId(userId);
+
+        return ResponseEntity.ok("Refresh token successfully removed.");
 
     }
 

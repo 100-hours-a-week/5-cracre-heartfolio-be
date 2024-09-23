@@ -34,9 +34,9 @@ public class ApiSearchNewsService {
     private final RedisUtil redisUtil;
 
     public NewsResponseDto searchNews(String query) {
-//        if(redisUtil.hasDailyNews(query)){
-//            return redisUtil.getDailyNewsTemplate(query).getNewsResponseDto();
-//        }
+        if(redisUtil.hasDailyNews(query)){
+            return redisUtil.getDailyNewsTemplate(query).getNewsResponseDto();
+        }
         String encodedQuery;
         try {
             encodedQuery = URLEncoder.encode(query, "UTF-8");
@@ -67,7 +67,7 @@ public class ApiSearchNewsService {
                     .collect(Collectors.toList());
 
             responseDto.setItems(filteredItems);
-//            redisUtil.setDailyNewsTemplate(query, DailyNewsDto.builder().date(LocalDate.now()).newsResponseDto(responseDto).build());
+            redisUtil.setDailyNewsTemplate(query, DailyNewsDto.builder().date(LocalDate.now()).newsResponseDto(responseDto).build());
             return responseDto;
         } catch (IOException e) {
             throw new RuntimeException("JSON 파싱 실패", e);
