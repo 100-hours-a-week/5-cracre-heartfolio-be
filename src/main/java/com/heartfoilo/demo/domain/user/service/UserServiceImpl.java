@@ -9,6 +9,7 @@ import com.heartfoilo.demo.domain.user.repository.UserRepository;
 import com.heartfoilo.demo.global.exception.UserNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +47,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> fixNickname(long userId,String nickname){
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("유저 정보를 찾을 수 없습니다."));
+        if (user.getNickname().equals(nickname)){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 닉네임입니다.");
+        } // status code 409 반환
         user.fixInfo(userId,nickname);
         userRepository.save(user);
 
