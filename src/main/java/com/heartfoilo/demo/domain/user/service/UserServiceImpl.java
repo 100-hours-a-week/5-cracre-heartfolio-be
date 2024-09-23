@@ -47,7 +47,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> fixNickname(long userId,String nickname){
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("유저 정보를 찾을 수 없습니다."));
-        if (user.getNickname().equals(nickname)){
+        boolean DuplicateNickname = userRepository.existsByNickname(nickname);
+        if (DuplicateNickname == true){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 닉네임입니다.");
         } // status code 409 반환
         user.fixInfo(userId,nickname);
@@ -56,5 +57,7 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok(user);
 
     }
+
+
 
 }

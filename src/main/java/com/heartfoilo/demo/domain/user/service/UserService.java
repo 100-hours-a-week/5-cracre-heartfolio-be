@@ -8,4 +8,5 @@ public interface UserService {
 
     public ResponseEntity<?> fixNickname(long userId,String nickname);
 
+
 }
