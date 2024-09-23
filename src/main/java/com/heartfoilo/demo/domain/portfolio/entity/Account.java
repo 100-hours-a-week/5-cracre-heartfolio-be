@@ -50,6 +50,7 @@ public class Account {
             this.cash = 0L;  // null일 경우 초기값을 설정
         }
         this.cash += additionalCash;
+        this.totalPurchase -= additionalCash;
     }
     public void BuyStock(Long totalAmount){
         this.cash -= totalAmount;
