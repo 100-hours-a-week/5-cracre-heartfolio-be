@@ -31,7 +31,6 @@ public class InvestController {
     @DeleteMapping("/order")
     public ResponseEntity<?> sell(@RequestBody InvestRequestDto getInfoRequestDto, HttpServletRequest request){
         String userStrId = (String) request.getAttribute("userId");
-        System.out.println(userStrId);
         if (userStrId == null) {
             return ResponseEntity.ok(Collections.emptyMap()); // 빈 Map 반환
         }

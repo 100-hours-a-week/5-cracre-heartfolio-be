@@ -7,7 +7,7 @@ on:
 
 jobs:
   backend-deploy:
-    runs-on: self-hosted
+    runs-on: [self-hosted, Linux, X64, develop]
     steps:
       # SOURCE 단계 - 저장소 Checkout 및 서브모듈 가져오기
       - name: Checkout-source code
@@ -35,10 +35,12 @@ jobs:
       # Spring boot application 빌드
       - name: Build with gradle
         run: ./gradlew clean build
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       # docker image 빌드
       - name: Build docker image
-        run: docker build -t limzzum/heartfolio_b:0.0.1 . --no-cache
+        run: docker build -t limzzum/heartfolio_b:dev . --no-cache
 
       # docker hub 로그인
       - name: Login docker hub
@@ -49,13 +51,13 @@ jobs:
 
       # docker hub 퍼블리시
       - name: Publish to docker hub
-        run: docker push limzzum/heartfolio_b:0.0.1
+        run: docker push limzzum/heartfolio_b:dev
 
       # 애플리케이션 실행
       - name: Execute Application
         run: |
             docker stop backend
             docker rm backend
-            docker pull limzzum/heartfolio_b:0.0.1
-            docker run -d -p 8080:8080 --name backend limzzum/heartfolio_b:0.0.1
+            docker pull limzzum/heartfolio_b:dev
+            docker run -d -p 8080:8080 --name backend limzzum/heartfolio_b:dev
             docker image prune -f
