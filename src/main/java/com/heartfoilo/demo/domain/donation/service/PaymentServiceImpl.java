@@ -84,11 +84,11 @@ public class PaymentServiceImpl implements PaymentService {
             Long userId = donation.getUser().getId(); // 여기까지 왔으면 donation 금액 추가
             Account account = portfolioRepository.findByUserId(userId);
             if (price == 1000L){
-                account.ChangeCash(1200000);
+                account.ChangeCash(1200000L);
                 account.ChangeDonationPayment(1000L);
             }
             else if(price == 2000L){
-                account.ChangeCash(2400000);
+                account.ChangeCash(2400000L);
                 account.ChangeDonationPayment(2000L);
             }
 

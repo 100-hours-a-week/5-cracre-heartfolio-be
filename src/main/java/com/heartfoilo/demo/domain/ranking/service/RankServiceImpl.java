@@ -75,5 +75,5 @@ public class RankServiceImpl implements RankService {
                 .collect(Collectors.toList());
         return new DonationRankResponseDto(DonationRank, donationRankResponseDtos);
     }
-    
+
 }

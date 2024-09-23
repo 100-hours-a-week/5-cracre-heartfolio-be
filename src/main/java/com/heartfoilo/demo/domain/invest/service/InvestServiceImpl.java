@@ -7,6 +7,8 @@ import com.heartfoilo.demo.domain.portfolio.entity.Account;
 import com.heartfoilo.demo.domain.portfolio.entity.TotalAssets;
 import com.heartfoilo.demo.domain.portfolio.repository.PortfolioRepository;
 import com.heartfoilo.demo.domain.portfolio.repository.TotalAssetsRepository;
+import com.heartfoilo.demo.domain.ranking.entity.Ranking;
+import com.heartfoilo.demo.domain.ranking.repository.RankingRepository;
 import com.heartfoilo.demo.domain.stock.entity.Stock;
 import com.heartfoilo.demo.domain.stock.repository.StockRepository;
 import com.heartfoilo.demo.domain.user.entity.User;
@@ -33,6 +35,8 @@ public class InvestServiceImpl implements InvestService{
     private StockRepository stockRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RankingRepository rankingRepository;
 
     public Order createOrder(Long userId, String orderCategory, Long nowQuantity, int nowAvgPrice, Long stockId) {
         Stock stock = stockRepository.findById(stockId)
@@ -138,6 +142,7 @@ public class InvestServiceImpl implements InvestService{
         if (nowQuantity < 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("판매할 수량이 보유 수량보다 많습니다.");
         }
+
         investRepository.save(orders);
 
         Account account = portfolioRepository.findByUserId(userId); // 임시 코드
@@ -146,6 +151,27 @@ public class InvestServiceImpl implements InvestService{
 
         account.ChangeCash(quantity * price);
 
+        long profit = (price - nowAvgPrice) * quantity;
+
+        float profitRate = (profit / (float) cash) * 100;
+        profitRate = Math.round(profitRate * 10) / 10.0f;
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Ranking userRanking = rankingRepository.findByUserId(userId)
+                .orElse(new Ranking(user));
+
+        float existingMonthlyReturn = userRanking.getMonthlyReturn(); // 기존 월별 수익률
+        float existingSumReturn = userRanking.getSumReturn(); // 기존 누적 수익률
+
+        float newMonthlyReturn = existingMonthlyReturn + profitRate;
+        float newSumReturn = existingSumReturn + profitRate;
+
+
+        userRanking.updateMonthlyReturn(newMonthlyReturn);
+        userRanking.updateSumReturn(newSumReturn);
+
+        rankingRepository.save(userRanking);
 
         portfolioRepository.save(account);
         if (nowQuantity == 0) {
