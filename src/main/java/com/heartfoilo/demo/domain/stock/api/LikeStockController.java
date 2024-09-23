@@ -22,7 +22,8 @@ public class LikeStockController {
     public ResponseEntity<Void> addFavorite(@PathVariable("stockId") Long stockId, HttpServletRequest request) {
 
         String userStrId = (String) request.getAttribute("userId");
-        if (userStrId == null) {
+        String token = (String) request.getAttribute("token");
+        if (userStrId == null || token == null) {
             // 비로그인 사용자 처리
             return ResponseEntity.status(401).build(); // 기본값 반환
         }
