@@ -8,4 +8,6 @@ public interface UserService {
 
     public ResponseEntity<?> fixNickname(long userId,String nickname);
 
+
+    public ResponseEntity<?> removeRefreshToken(long userId);
 }
