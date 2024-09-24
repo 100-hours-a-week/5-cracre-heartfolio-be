@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface RankingRepository extends JpaRepository<Ranking, Long> {
     List<Ranking> findTop10ByOrderByMonthlyReturnDesc();
     List<Ranking> findTop10ByOrderBySumReturnDesc();
-    List<Ranking> findTop10ByOrderByDonationDesc();
+    List<Ranking> findTop10ByOrderByDonationDescIdAsc();
 
     @Query(value = "SELECT ranked.`rank` FROM (SELECT user_id, RANK() OVER (ORDER BY sum_return DESC) AS `rank` FROM ranking) ranked WHERE ranked.user_id = :userId", nativeQuery = true)
     Optional<Integer> findUserRankBySumReturn(Long userId);
@@ -21,7 +21,7 @@ public interface RankingRepository extends JpaRepository<Ranking, Long> {
     Optional<Integer> findUserRankByMonthlyReturn(Long userId);
 
     // donation에 대한 특정 사용자의 랭크 반환
-    @Query(value = "SELECT ranked.`rank` FROM (SELECT user_id, RANK() OVER (ORDER BY donation DESC) AS `rank` FROM ranking) ranked WHERE ranked.user_id = :userId", nativeQuery = true)
+    @Query(value = "SELECT ranked.`rank` FROM (SELECT user_id, RANK() OVER (ORDER BY donation DESC, ranking_id ASC) AS `rank` FROM ranking) ranked WHERE ranked.user_id = :userId", nativeQuery = true)
     Optional<Integer> findUserRankByDonation(Long userId);
 
     @Query("SELECT r FROM Ranking r WHERE r.user.id = :userId")
