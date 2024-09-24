@@ -2,6 +2,7 @@ package com.heartfoilo.demo.domain.ranking.repository;
 
 import com.heartfoilo.demo.domain.ranking.entity.Ranking;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -22,4 +23,11 @@ public interface RankingRepository extends JpaRepository<Ranking, Long> {
     // donation에 대한 특정 사용자의 랭크 반환
     @Query(value = "SELECT ranked.`rank` FROM (SELECT user_id, RANK() OVER (ORDER BY donation DESC) AS `rank` FROM ranking) ranked WHERE ranked.user_id = :userId", nativeQuery = true)
     Optional<Integer> findUserRankByDonation(Long userId);
+
+    @Query("SELECT r FROM Ranking r WHERE r.user.id = :userId")
+    Optional<Ranking> findByUserId(Long userId);
+
+    @Modifying
+    @Query("UPDATE Ranking r SET r.monthlyReturn = 0")
+    void resetAllMonthlyReturns();
 }

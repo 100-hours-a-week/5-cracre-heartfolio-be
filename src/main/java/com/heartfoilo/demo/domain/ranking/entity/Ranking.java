@@ -28,4 +28,21 @@ public class Ranking {
 
     @Column(nullable = false)
     private Long donation;
+
+    public Ranking(User user) {
+        this.user = user;
+        this.sumReturn = 0.0f;
+        this.monthlyReturn = 0.0f;
+        this.donation = 0L;
+    }
+    public void updateMonthlyReturn(float newMonthlyReturn) {
+        this.monthlyReturn = newMonthlyReturn;
+    }
+
+    // 수익률 갱신 메서드: 누적 수익률 갱신
+    public void updateSumReturn(float newSumReturn) {
+        this.sumReturn = newSumReturn;
+    }
+
+    public void updateDonation(Long donation) { this.donation = donation; }
 }
