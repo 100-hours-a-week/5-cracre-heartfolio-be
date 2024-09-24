@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class RankingResponseDto {
+    private Long userId;
     private String profile;
     private String name;
     private float percentage;
