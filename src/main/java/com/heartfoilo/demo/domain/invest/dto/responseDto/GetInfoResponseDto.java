@@ -14,11 +14,11 @@ public class GetInfoResponseDto {
     private String orderCategory;
     private LocalDateTime orderDate;
     private Long orderAmount;
-    private Long orderPrice;
+    private int orderPrice;
     private Long totalAmount;
     private Long id;
     private String name;
-    public GetInfoResponseDto(String name, String orderCategory, LocalDateTime orderDate, Long orderAmount, Long orderPrice, Long totalAmount, Long id) {
+    public GetInfoResponseDto(String name, String orderCategory, LocalDateTime orderDate, Long orderAmount, int orderPrice, Long totalAmount, Long id) {
         this.name = name;
         this.orderCategory = orderCategory;
         this.orderDate = orderDate;

@@ -7,5 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class StockSearchResponseDto {
     private Long stockId;
-    private String stockName;
+    private String koreanName;
+    private String englishName;
 }
