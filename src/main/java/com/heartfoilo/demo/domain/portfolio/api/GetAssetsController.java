@@ -37,7 +37,7 @@ public class GetAssetsController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<Map<String,Object>> getUserAssets(HttpServletRequest request, @PathVariable("userId") Long userId){
+        public ResponseEntity<Map<String,Object>> getUserAssets(HttpServletRequest request, @PathVariable("userId") Long userId){
         String userStrId = (String) request.getAttribute("userId");
         if (userStrId == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

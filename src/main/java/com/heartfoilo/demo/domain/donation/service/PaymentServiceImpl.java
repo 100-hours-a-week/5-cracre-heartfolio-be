@@ -86,7 +86,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             }
             Long userId = donation.getUser().getId(); // 여기까지 왔으면 donation 금액 추가
-            Account account = portfolioRepository.findByUserId(userId);
+            Account account = portfolioRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Account not found"));
             if (price == 1000L){
                 account.ChangeCash(1200000L);
                 account.ChangeDonationPayment(1000L);
