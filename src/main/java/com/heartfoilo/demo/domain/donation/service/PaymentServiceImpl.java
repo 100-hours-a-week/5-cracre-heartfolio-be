@@ -10,6 +10,8 @@ import com.heartfoilo.demo.domain.invest.entity.Order;
 import com.heartfoilo.demo.domain.invest.repository.OrderRepository;
 import com.heartfoilo.demo.domain.portfolio.entity.Account;
 import com.heartfoilo.demo.domain.portfolio.repository.PortfolioRepository;
+import com.heartfoilo.demo.domain.ranking.entity.Ranking;
+import com.heartfoilo.demo.domain.ranking.repository.RankingRepository;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
@@ -33,6 +35,8 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final IamportClient iamportClient;
     private final PortfolioRepository portfolioRepository;
+    private final RankingRepository rankingRepository;
+
     @Override
     public RequestPayDto findRequestDto(String orderUid) {
         Donation donation = donationRepository.findOrderAndPaymentAndMember(orderUid).orElseThrow(() -> new IllegalArgumentException("주문이 없습니다."));
@@ -93,6 +97,12 @@ public class PaymentServiceImpl implements PaymentService {
             }
 
             portfolioRepository.save(account);
+
+            Ranking userRanking = rankingRepository.findByUserId(userId)
+                    .orElse(new Ranking(donation.getUser()));
+            Long newDonation = account.getDonationPayment();
+            userRanking.updateDonation(newDonation);
+            rankingRepository.save(userRanking);
 
             donation.getPayment().changePaymentBySuccess(PaymentStatus.OK, iamportResponse.getResponse().getImpUid());
 

@@ -43,4 +43,6 @@ public class Ranking {
     public void updateSumReturn(float newSumReturn) {
         this.sumReturn = newSumReturn;
     }
+
+    public void updateDonation(Long donation) { this.donation = donation; }
 }
