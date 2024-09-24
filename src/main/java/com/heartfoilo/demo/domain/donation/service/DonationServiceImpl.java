@@ -6,6 +6,8 @@ import com.heartfoilo.demo.domain.donation.payment.PaymentStatus;
 import com.heartfoilo.demo.domain.donation.repository.DonationRepository;
 import com.heartfoilo.demo.domain.donation.repository.PaymentRepository;
 import com.heartfoilo.demo.domain.invest.repository.OrderRepository;
+import com.heartfoilo.demo.domain.ranking.entity.Ranking;
+import com.heartfoilo.demo.domain.ranking.repository.RankingRepository;
 import com.heartfoilo.demo.domain.user.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ public class DonationServiceImpl implements DonationService {
 
     private final DonationRepository donationRepository;
     private final PaymentRepository paymentRepository;
+    private final RankingRepository rankingRepository;
 
     @Override
     public Donation makeDontaion(User user,Long cash){ // token을 통해 Controller에서 Id를 가져온다
@@ -37,6 +40,13 @@ public class DonationServiceImpl implements DonationService {
                 .orderUid(UUID.randomUUID().toString()) // 주문번호
                 .payment(payment)
                 .build();
+
+        Ranking userRanking = rankingRepository.findByUserId(user.getId())
+                .orElse(new Ranking(user));
+        Long price = userRanking.getDonation();
+        Long newDonation = price + payment.getPrice();
+        userRanking.updateDonation(newDonation);
+        rankingRepository.save(userRanking);
 
         return donationRepository.save(donation);
 
