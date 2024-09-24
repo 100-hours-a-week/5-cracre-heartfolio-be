@@ -91,6 +91,7 @@ public class PaymentServiceImpl implements PaymentService {
                 account.ChangeCash(2400000L);
                 account.ChangeDonationPayment(2000L);
             }
+            
 
             portfolioRepository.save(account);
 
