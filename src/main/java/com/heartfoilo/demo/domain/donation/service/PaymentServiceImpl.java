@@ -96,14 +96,13 @@ public class PaymentServiceImpl implements PaymentService {
                 account.ChangeDonationPayment(2000L);
             }
 
+            portfolioRepository.save(account);
+
             Ranking userRanking = rankingRepository.findByUserId(userId)
                     .orElse(new Ranking(donation.getUser()));
-            Long donationPrice = userRanking.getDonation();
-            Long newDonation = donationPrice + account.getDonationPayment();
+            Long newDonation = account.getDonationPayment();
             userRanking.updateDonation(newDonation);
             rankingRepository.save(userRanking);
-
-            portfolioRepository.save(account);
 
             donation.getPayment().changePaymentBySuccess(PaymentStatus.OK, iamportResponse.getResponse().getImpUid());
 
