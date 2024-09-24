@@ -119,7 +119,7 @@ public class KakaoService{
         String profileImageUrl = kakaoUserInfoResponseDto.getKakaoAccount().getProfile().getProfileImageUrl();
         Optional<User> kakaoUser = userRepository.findById(id);
 
-        String nickname = "사용자" + random.nextInt(99999) + 1;
+        String nickname = "N" + random.nextInt(99999) + 1;
         if (!kakaoUser.isPresent()) {
             User newUser = new User(id,name, nickname,profileImageUrl);
             Account account = new Account(newUser,10000000L,0L);
