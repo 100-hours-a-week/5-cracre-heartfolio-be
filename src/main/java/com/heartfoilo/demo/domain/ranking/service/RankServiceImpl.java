@@ -32,7 +32,7 @@ public class RankServiceImpl implements RankService {
         List<RankingResponseDto> rankingResponseDtos = ranks.stream()
                 .map(rank -> new RankingResponseDto(
                         rank.getUser().getProfileImageUrl(),
-                        rank.getUser().getName(),
+                        rank.getUser().getNickname(),
                         rank.getMonthlyReturn()
                 ))
                 .collect(Collectors.toList());
@@ -50,7 +50,7 @@ public class RankServiceImpl implements RankService {
         List<RankingResponseDto> rankingResponseDtos = ranks.stream()
                 .map(rank -> new RankingResponseDto(
                         rank.getUser().getProfileImageUrl(),
-                        rank.getUser().getName(),
+                        rank.getUser().getNickname(),
                         rank.getSumReturn()
                 ))
                 .collect(Collectors.toList());
@@ -69,7 +69,7 @@ public class RankServiceImpl implements RankService {
         List<RankingDonationResponseDto> donationRankResponseDtos = ranks.stream()
                 .map(rank -> new RankingDonationResponseDto(
                         rank.getUser().getProfileImageUrl(),
-                        rank.getUser().getName(),
+                        rank.getUser().getNickname(),
                         rank.getDonation()
                 ))
                 .collect(Collectors.toList());
