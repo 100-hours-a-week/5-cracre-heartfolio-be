@@ -23,12 +23,12 @@ public class GetAssetsController {
         if (userStrId == null) {
             // 비로그인 사용자 처리
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        } // 이경우는 AccessToken이 만료된 경우
         String token = (String) request.getAttribute("token");
 
         if (token == null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+            return ResponseEntity.ok(Collections.emptyMap());
+        } // 이경우가 Bearer만 간 경우(토큰이 없는 경우)
         return getAssetsServiceImpl.getAssets(Long.valueOf(userStrId));
     }
 }
