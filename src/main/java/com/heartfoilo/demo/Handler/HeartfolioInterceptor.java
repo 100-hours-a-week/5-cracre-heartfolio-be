@@ -51,7 +51,6 @@ public class HeartfolioInterceptor implements HandlerInterceptor {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 반환
                 response.getWriter().write("{\"message\": \"Access token has expired\", \"status\": 401}");
                 response.getWriter().flush();
-                request.setAttribute("token",null);
                 return false;
             } // 여기서 401 요청시 프론트엔드에서 RefreshToken 요청
 
