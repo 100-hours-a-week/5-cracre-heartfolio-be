@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -21,18 +22,15 @@ import java.util.Map;
 public class GetAssetsController {
 
     private final GetAssetsService getAssetsService;
+
     @GetMapping // 보유 자산 조회 API
     public ResponseEntity<Map<String,Object>> getAssets(HttpServletRequest request){
         String userStrId = (String) request.getAttribute("userId");
         if (userStrId == null) {
-            // 비로그인 사용자 처리
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } // 이경우는 AccessToken이 만료된 경우
-        String token = (String) request.getAttribute("token");
-
-        if (token == null){
+            // 토큰이 아예 없는경우 , "Bearer" 문자열만 옴
             return ResponseEntity.ok(Collections.emptyMap());
-        } // 이경우가 Bearer만 간 경우(토큰이 없는 경우)
+        }
+
         return getAssetsService.getAssets(Long.valueOf(userStrId));
     }
 
@@ -40,13 +38,9 @@ public class GetAssetsController {
         public ResponseEntity<Map<String,Object>> getUserAssets(HttpServletRequest request, @PathVariable("userId") Long userId){
         String userStrId = (String) request.getAttribute("userId");
         if (userStrId == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }  // 이경우가 Bearer만 간 경우(토큰이 없는 경우) -> 400 return
-        String token = (String) request.getAttribute("token");
-
-        if (token == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } // 토큰이 만료된 경우 -> 401 return
+        } // 로그인 안된 사용자는 401로 return
+
         return getAssetsService.getAssets(userId);
     }
 }
