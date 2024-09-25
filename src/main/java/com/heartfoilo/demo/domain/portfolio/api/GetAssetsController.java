@@ -21,6 +21,7 @@ import java.util.Map;
 public class GetAssetsController {
 
     private final GetAssetsService getAssetsService;
+
     @GetMapping // 보유 자산 조회 API
     public ResponseEntity<Map<String,Object>> getAssets(HttpServletRequest request){
         String userStrId = (String) request.getAttribute("userId");
