@@ -27,7 +27,6 @@ public class HeartfolioInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("Authorization");
-        request.setAttribute("token",token);
         if (token == null || token.equals("Bearer null") || !token.startsWith("Bearer ")) {
             //response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "토큰이 유효하지 않습니다.");
             request.setAttribute("userId", null);
