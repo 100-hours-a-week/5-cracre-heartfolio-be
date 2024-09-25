@@ -76,7 +76,7 @@ public class InvestServiceImpl implements InvestService{
 
             investRepository.save(orders);
 
-            Account account =  portfolioRepository.findByUserId(userId); // TODO : userId JWT로 대체
+            Account account =  portfolioRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Account not found")); // TODO : userId JWT로 대체
 
             Long cash = account.getCash();
             Long totalPurchase = account.getTotalPurchase();
@@ -107,7 +107,7 @@ public class InvestServiceImpl implements InvestService{
         investRepository.save(orders);
 
         // Account 엔티티 업데이트
-        Account account =  portfolioRepository.findByUserId(userId); // TODO : userId JWT로 대체
+        Account account =  portfolioRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Account not found")); // TODO : userId JWT로 대체
 
         Long cash = account.getCash();
         Long totalPurchase = account.getTotalPurchase();
@@ -145,7 +145,7 @@ public class InvestServiceImpl implements InvestService{
 
         investRepository.save(orders);
 
-        Account account = portfolioRepository.findByUserId(userId); // 임시 코드
+        Account account = portfolioRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Account not found")); // 임시 코드
         Long cash = account.getCash(); // 현재 잔액 조회
         Long totalPurchase = account.getTotalPurchase();
 

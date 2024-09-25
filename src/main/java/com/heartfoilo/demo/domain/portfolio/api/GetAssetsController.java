@@ -1,11 +1,14 @@
 package com.heartfoilo.demo.domain.portfolio.api;
 
+import com.heartfoilo.demo.domain.portfolio.service.GetAssetsService;
 import com.heartfoilo.demo.domain.portfolio.service.GetAssetsServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,22 +16,37 @@ import java.util.Collections;
 import java.util.Map;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/portfolio")
 public class GetAssetsController {
-    @Autowired
-    private GetAssetsServiceImpl getAssetsServiceImpl;
+
+    private final GetAssetsService getAssetsService;
     @GetMapping // 보유 자산 조회 API
     public ResponseEntity<Map<String,Object>> getAssets(HttpServletRequest request){
         String userStrId = (String) request.getAttribute("userId");
         if (userStrId == null) {
             // 비로그인 사용자 처리
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        } // 이경우는 AccessToken이 만료된 경우
+        String token = (String) request.getAttribute("token");
+
+        if (token == null){
+            return ResponseEntity.ok(Collections.emptyMap());
+        } // 이경우가 Bearer만 간 경우(토큰이 없는 경우)
+        return getAssetsService.getAssets(Long.valueOf(userStrId));
+    }
+
+    @GetMapping("/{userId}")
+        public ResponseEntity<Map<String,Object>> getUserAssets(HttpServletRequest request, @PathVariable("userId") Long userId){
+        String userStrId = (String) request.getAttribute("userId");
+        if (userStrId == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }  // 이경우가 Bearer만 간 경우(토큰이 없는 경우) -> 400 return
         String token = (String) request.getAttribute("token");
 
         if (token == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        return getAssetsServiceImpl.getAssets(Long.valueOf(userStrId));
+        } // 토큰이 만료된 경우 -> 401 return
+        return getAssetsService.getAssets(userId);
     }
 }
