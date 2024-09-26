@@ -30,7 +30,6 @@ public class GetAssetsController {
             // 토큰이 아예 없는경우 , "Bearer" 문자열만 옴
             return ResponseEntity.ok(Collections.emptyMap());
         }
-
         return getAssetsService.getAssets(Long.valueOf(userStrId));
     }
 
