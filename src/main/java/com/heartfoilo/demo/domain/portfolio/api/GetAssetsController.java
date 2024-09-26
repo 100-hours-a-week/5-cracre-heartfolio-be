@@ -27,8 +27,8 @@ public class GetAssetsController {
     public ResponseEntity<Map<String,Object>> getAssets(HttpServletRequest request){
         String userStrId = (String) request.getAttribute("userId");
         if (userStrId == null) {
-            // 비로그인 사용자 처리
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            // 토큰이 아예 없는경우 , "Bearer" 문자열만 옴
+            return ResponseEntity.ok(Collections.emptyMap());
         }
         return getAssetsService.getAssets(Long.valueOf(userStrId));
     }
