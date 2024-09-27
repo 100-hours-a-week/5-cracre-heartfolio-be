@@ -12,6 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
+
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -26,8 +28,7 @@ public class PopularStockServiceImpl implements PopularStockService{
 
     @Override
     public List<PopularStockResponseDto> getPopularStocks(int limit) {
-        Pageable pageable = PageRequest.of(0, limit);
-        List<Stock> popularStocks=  stockRepository.findAllByOrderByEarningRateDesc(pageable);
+        List<Stock> popularStocks=  stockRepository.findAll();
 
         AtomicInteger rankCounter = new AtomicInteger(1);
 
@@ -36,7 +37,8 @@ public class PopularStockServiceImpl implements PopularStockService{
                     int curPrice = 0;
                     int earningValue = 0;
                     float earningRate = 0;
-                    //TODO: Redis연결 실패했을 때 예외처리
+
+                    // Redis 연결 실패 시 예외 처리
                     if (redisUtil.hasKeyStockInfo(stock.getSymbol())) {
                         StockSocketInfoDto stockInfo = redisUtil.getStockInfoTemplate(stock.getSymbol());
                         curPrice = stockInfo.getCurPrice();
@@ -54,6 +56,10 @@ public class PopularStockServiceImpl implements PopularStockService{
                             earningRate,
                             stock.getSector()
                     );
-                }).collect(Collectors.toList());
+                })
+                // earningRate 기준으로 정렬
+                .sorted(Comparator.comparing(PopularStockResponseDto::getEarningRate).reversed()) // 내림차순 정렬
+                .limit(limit) // 결과를 제한
+                .collect(Collectors.toList());
     }
 }
