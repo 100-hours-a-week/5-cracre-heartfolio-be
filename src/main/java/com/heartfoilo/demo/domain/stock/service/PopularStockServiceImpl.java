@@ -30,9 +30,9 @@ public class PopularStockServiceImpl implements PopularStockService{
     public List<PopularStockResponseDto> getPopularStocks(int limit) {
         List<Stock> popularStocks=  stockRepository.findAll();
 
-        AtomicInteger rankCounter = new AtomicInteger(1);
 
-        return popularStocks.stream()
+
+        List<PopularStockResponseDto> sortedStocks = popularStocks.stream()
                 .map(stock -> {
                     int curPrice = 0;
                     int earningValue = 0;
@@ -48,7 +48,7 @@ public class PopularStockServiceImpl implements PopularStockService{
 
                     return new PopularStockResponseDto(
                             stock.getId(),
-                            rankCounter.getAndIncrement(), // 순위
+                            0, // 순위
                             stock.getName(),
                             stock.getEnglishName(),
                             curPrice, // 현재가
@@ -61,5 +61,9 @@ public class PopularStockServiceImpl implements PopularStockService{
                 .sorted(Comparator.comparing(PopularStockResponseDto::getEarningRate).reversed()) // 내림차순 정렬
                 .limit(limit) // 결과를 제한
                 .collect(Collectors.toList());
+
+        AtomicInteger rankCounter = new AtomicInteger(1);
+        sortedStocks.forEach(stock -> stock.setRank(rankCounter.getAndIncrement()));
+        return sortedStocks;
     }
 }
