@@ -13,6 +13,9 @@ import com.heartfoilo.demo.domain.stock.entity.Stock;
 import com.heartfoilo.demo.domain.stock.repository.StockRepository;
 import com.heartfoilo.demo.domain.user.entity.User;
 import com.heartfoilo.demo.domain.user.repository.UserRepository;
+import com.heartfoilo.demo.domain.webSocket.dto.StockSocketInfoDto;
+import com.heartfoilo.demo.util.RedisUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,21 +26,23 @@ import java.time.ZoneId;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class InvestServiceImpl implements InvestService{
 
-    @Autowired
-    private TotalAssetsRepository totalAssetsRepository;
-    @Autowired
-    private PortfolioRepository portfolioRepository;
-    @Autowired
-    private InvestRepository investRepository;
-    @Autowired
-    private StockRepository stockRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RankingRepository rankingRepository;
 
+    private final TotalAssetsRepository totalAssetsRepository;
+
+    private final PortfolioRepository portfolioRepository;
+
+    private final InvestRepository investRepository;
+
+    private final StockRepository stockRepository;
+
+    private final UserRepository userRepository;
+
+    private final RankingRepository rankingRepository;
+
+    private final RedisUtil redisUtil;
     public Order createOrder(Long userId, String orderCategory, Long nowQuantity, int nowAvgPrice, Long stockId) {
         Stock stock = stockRepository.findById(stockId)
                 .orElseThrow(() -> new RuntimeException("Stock not found with id: " + stockId));
@@ -63,6 +68,12 @@ public class InvestServiceImpl implements InvestService{
         Stock stock = stockRepository.findById(stockId).orElseThrow(() -> new RuntimeException("Stock not found")); // 예외처리는 언제나!^_^
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
+        StockSocketInfoDto stockInfo = redisUtil.getStockInfoTemplate(stock.getSymbol()); // TODO: NULL값 에러 발생
+
+        if (stockInfo.getCurPrice() != price){
+            throw new IllegalArgumentException("현재 가격(" + stockInfo.getCurPrice() + ")이 제공된 가격(" + price + ")과 일치하지 않습니다.");
+        } // 1원 버그 방지
+
 
         TotalAssets totalAssets = totalAssetsRepository.findByStockIdAndUserId(stockId,userId);
         if (totalAssets == null) {
@@ -76,7 +87,7 @@ public class InvestServiceImpl implements InvestService{
 
             investRepository.save(orders);
 
-            Account account =  portfolioRepository.findByUserId(userId); // TODO : userId JWT로 대체
+            Account account =  portfolioRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Account not found")); // TODO : userId JWT로 대체
 
             Long cash = account.getCash();
             Long totalPurchase = account.getTotalPurchase();
@@ -107,7 +118,7 @@ public class InvestServiceImpl implements InvestService{
         investRepository.save(orders);
 
         // Account 엔티티 업데이트
-        Account account =  portfolioRepository.findByUserId(userId); // TODO : userId JWT로 대체
+        Account account =  portfolioRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Account not found")); // TODO : userId JWT로 대체
 
         Long cash = account.getCash();
         Long totalPurchase = account.getTotalPurchase();
@@ -131,13 +142,21 @@ public class InvestServiceImpl implements InvestService{
         Long quantity = getInfoRequestDto.getQuantity(); // 요청한 수량
         long price = getInfoRequestDto.getPrice();
 
+        Stock stock = stockRepository.findById(stockId).orElseThrow(() -> new RuntimeException("Stock not found")); // 예외처리는 언제나
         TotalAssets totalAssets = totalAssetsRepository.findByStockIdAndUserId(stockId,userId);
+
         if (totalAssets == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 자산을 찾을 수 없습니다.");
         } // 팔려는데 Null이면 그건 문제가 있는거임
         Long nowQuantity = totalAssets.getTotalQuantity();
         Long nowAvgPrice = totalAssets.getPurchaseAvgPrice(); // 현재 평단가
         nowQuantity = nowQuantity - quantity ; // 판만큼 빼주고 , 판매시 평단가는 그대로임
+
+        StockSocketInfoDto stockInfo = redisUtil.getStockInfoTemplate(stock.getSymbol()); // TODO: NULL값 에러 발생
+
+        if (stockInfo.getCurPrice() != price){
+            throw new IllegalArgumentException("현재 가격(" + stockInfo.getCurPrice() + ")이 제공된 가격(" + price + ")과 일치하지 않습니다.");
+        } // 돈 무한생성 버그 방지하기 위해 , 현재 가격과 price가 일치하지 않는다면 다시 보낸다
         Order orders = createOrder( userId, "sell", quantity, (int)price,stockId);
         if (nowQuantity < 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("판매할 수량이 보유 수량보다 많습니다.");
@@ -145,7 +164,7 @@ public class InvestServiceImpl implements InvestService{
 
         investRepository.save(orders);
 
-        Account account = portfolioRepository.findByUserId(userId); // 임시 코드
+        Account account = portfolioRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Account not found")); // 임시 코드
         Long cash = account.getCash(); // 현재 잔액 조회
         Long totalPurchase = account.getTotalPurchase();
 

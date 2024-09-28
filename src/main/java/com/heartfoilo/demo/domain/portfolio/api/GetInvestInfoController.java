@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,4 +30,16 @@ public class GetInvestInfoController {
         }
         return ResponseEntity.ok(getInvestInfoServiceImpl.getInvestInfo(Long.parseLong(userStrId)));
     }
+
+    @GetMapping("/investInfo/{userId}")
+    public ResponseEntity<?> getUserInvestInfo(HttpServletRequest request,@PathVariable("userId") Long userId){
+        String userStrId = (String) request.getAttribute("userId");
+
+        if (userStrId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } // 로그인 안된 사용자는 401로 return
+        return ResponseEntity.ok(getInvestInfoServiceImpl.getInvestInfo(userId));
+    }
+
+
 }

@@ -31,8 +31,9 @@ public class RankServiceImpl implements RankService {
 
         List<RankingResponseDto> rankingResponseDtos = ranks.stream()
                 .map(rank -> new RankingResponseDto(
+                        rank.getUser().getId(),
                         rank.getUser().getProfileImageUrl(),
-                        rank.getUser().getName(),
+                        rank.getUser().getNickname(),
                         rank.getMonthlyReturn()
                 ))
                 .collect(Collectors.toList());
@@ -49,8 +50,9 @@ public class RankServiceImpl implements RankService {
         }
         List<RankingResponseDto> rankingResponseDtos = ranks.stream()
                 .map(rank -> new RankingResponseDto(
+                        rank.getUser().getId(),
                         rank.getUser().getProfileImageUrl(),
-                        rank.getUser().getName(),
+                        rank.getUser().getNickname(),
                         rank.getSumReturn()
                 ))
                 .collect(Collectors.toList());
@@ -62,14 +64,15 @@ public class RankServiceImpl implements RankService {
     public DonationRankResponseDto getDonationRanking(Long userId) {
         Integer DonationRank = (userId == null) ? -1 : rankingRepository.findUserRankByDonation(userId).orElse(-1);
 
-        List<Ranking> ranks = rankingRepository.findTop10ByOrderByDonationDesc();
+        List<Ranking> ranks = rankingRepository.findTop10ByOrderByDonationDescIdAsc();
         if (ranks.isEmpty()) {
             return new DonationRankResponseDto(DonationRank, Collections.emptyList());
         }
         List<RankingDonationResponseDto> donationRankResponseDtos = ranks.stream()
                 .map(rank -> new RankingDonationResponseDto(
+                        rank.getUser().getId(),
                         rank.getUser().getProfileImageUrl(),
-                        rank.getUser().getName(),
+                        rank.getUser().getNickname(),
                         rank.getDonation()
                 ))
                 .collect(Collectors.toList());

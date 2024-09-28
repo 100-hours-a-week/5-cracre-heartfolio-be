@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
         info.put("name",user.getName());
         info.put("nickname",user.getNickname());
 
-        Account account = portfolioRepository.findByUserId(userId);
+        Account account = portfolioRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Account not found"));
         if(account == null){
             throw new EntityNotFoundException("Account not exist");
         }

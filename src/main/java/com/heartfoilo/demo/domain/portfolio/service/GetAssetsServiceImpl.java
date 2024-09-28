@@ -27,13 +27,7 @@ public class GetAssetsServiceImpl implements GetAssetsService{
         Map<String, Object> responseMap = new HashMap<>();
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
-        Account account = portfolioRepository.findByUserId(userId);
-
-        if (account == null) {
-            return ResponseEntity.ok(Collections.emptyMap());
-            // FIX :존재하지 않는다면 ,,, 근데 사실 존재하지 않으면 그건 데이터 설계가 잘못된거임
-        }
-
+        Account account = portfolioRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Account not found"));
 
         long cash = account.getCash();
         long totalPurchase = account.getTotalPurchase();
