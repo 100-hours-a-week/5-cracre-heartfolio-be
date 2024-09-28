@@ -1,13 +1,14 @@
-package com.goorm.jeff.global.exception;
+package com.heartfoilo.demo.global.exception;
 
-import static com.goorm.jeff.global.constant.ExceptionMessage.NO_API_KEY_MSG;
 
-import org.apache.coyote.BadRequestException;
+import static com.heartfoilo.demo.global.constant.ExceptionMessage.NO_AUTH_MSG;
 
-public class NoAuthInfoException extends BadRequestException {
+import javax.naming.AuthenticationException;
+
+public class NoAuthInfoException extends AuthenticationException {
 
     public NoAuthInfoException() {
-        super(NO_API_KEY_MSG);
+        super(NO_AUTH_MSG);
     }
 
 
