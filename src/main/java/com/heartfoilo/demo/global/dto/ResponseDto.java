@@ -1,4 +1,4 @@
-package com.goorm.jeff.global.dto;
+package com.heartfoilo.demo.global.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
