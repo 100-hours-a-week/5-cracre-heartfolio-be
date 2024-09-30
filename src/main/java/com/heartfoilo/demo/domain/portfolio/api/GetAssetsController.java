@@ -15,11 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.Collections;
-<<<<<<< HEAD
 import java.util.List;
-=======
-import java.util.HashMap;
->>>>>>> dev
+
 import java.util.Map;
 
 @RestController
@@ -30,7 +27,6 @@ public class GetAssetsController {
     private final GetAssetsService getAssetsService;
 
     @GetMapping // 보유 자산 조회 API
-<<<<<<< HEAD
     public ResponseEntity<?> getAssets(HttpServletRequest request){
         Long userId = (Long) request.getAttribute("userId");
         if (userId == null) {

@@ -24,12 +24,12 @@ public class OrderController {
 
     @GetMapping("/order/{stock_id}/history")
     public ResponseEntity<List<OrderHistoryResponseDto>> getOrderHistory(@PathVariable("stock_id") Long stockId, HttpServletRequest request) {
-        String userStrId = (String) request.getAttribute("userId");
-        if (userStrId == null) {
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
             // 비로그인 사용자 처리
             return ResponseEntity.ok(Collections.emptyList()); // 기본값 반환
         }
-        Long userId = Long.parseLong(userStrId);
+
 
         List<OrderHistoryResponseDto> history = orderService.getOrderHistory(userId, stockId);
         Collections.reverse(history); // 역순으로 바꿔주면서 최신이 가장 위로 올라간다
@@ -44,12 +44,12 @@ public class OrderController {
 
     @GetMapping("/order/{stock_id}/details")
     public ResponseEntity<GetAmountResponseDto> getStockInfo(@PathVariable("stock_id") long stockId, HttpServletRequest request){
-        String userStrId = (String) request.getAttribute("userId");
+        Long userId = (Long) request.getAttribute("userId");
         GetAmountResponseDto getAmountResponseDto;
-        if (userStrId == null) {
+        if (userId == null) {
             getAmountResponseDto =  stockInfoService.getInfoNoUser(stockId);
         } else {
-            Long userId = Long.parseLong(userStrId);
+
 
             getAmountResponseDto =  stockInfoService.getInfo(userId, stockId);
         }
