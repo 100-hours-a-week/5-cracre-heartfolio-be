@@ -21,13 +21,13 @@ public class LikeStockController {
     @PostMapping("/{stockId}")
     public ResponseEntity<Void> addFavorite(@PathVariable("stockId") Long stockId, HttpServletRequest request) {
 
-        String userStrId = (String) request.getAttribute("userId");
+        Long userId = (Long) request.getAttribute("userId");
         String token = (String) request.getAttribute("token");
-        if (userStrId == null || token == null) {
+        if (userId == null || token == null) {
             // 비로그인 사용자 처리
             return ResponseEntity.status(401).build(); // 기본값 반환
         }
-        Long userId = Long.parseLong(userStrId);
+
 
 
         likeService.addFavorite(userId, stockId);
@@ -37,12 +37,12 @@ public class LikeStockController {
     @GetMapping
     public ResponseEntity<List<LikeStockResponseDto>> getFavorite(HttpServletRequest request) {
 
-        String userStrId = (String) request.getAttribute("userId");
-        if (userStrId == null) {
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
             // 비로그인 사용자 처리
             return ResponseEntity.ok(Collections.emptyList()); // 기본값 반환
         }
-        Long userId = Long.parseLong(userStrId);
+
         List<LikeStockResponseDto> favorites = likeService.getFavorites(userId);
 
         return ResponseEntity.ok(favorites);
@@ -51,15 +51,14 @@ public class LikeStockController {
     @DeleteMapping("/{stockId}")
     public ResponseEntity<Void> removeFavorite(@PathVariable("stockId") Long stockId, HttpServletRequest request) {
 
-        String userStrId = (String) request.getAttribute("userId");
-        if (userStrId == null) {
+        Long userId = (Long) request.getAttribute("userId");
+
+        if (userId == null) {
             // 비로그인 사용자 처리
             return ResponseEntity.status(401).build(); // 기본값 반환
         }
-        Long userId = Long.parseLong(userStrId);
-        if (userId == null) {
-            return ResponseEntity.status(401).build(); // Unauthorized 처리
-        }
+
+
 
         likeService.removeFavorite(userId, stockId);
         return ResponseEntity.ok().build();

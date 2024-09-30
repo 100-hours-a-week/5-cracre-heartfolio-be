@@ -21,11 +21,8 @@ public class RankController {
 
     @GetMapping("/month")
     public ResponseEntity<MonthlyRankResponseDto> getMonthlyRanking(HttpServletRequest request) {
-        String userStrId = (String) request.getAttribute("userId");
-        Long userId = null;
-        if (userStrId != null) {
-            userId = Long.parseLong(userStrId);
-        }
+        Long userId = (Long) request.getAttribute("userId");
+
 
         MonthlyRankResponseDto ranks = rankService.getMonthlyRanking(userId);
         return ResponseEntity.ok(ranks);
@@ -33,11 +30,7 @@ public class RankController {
 
     @GetMapping("/cumulativeRevenue")
     public ResponseEntity<CumulativeRankResponseDto> getCumulativeRanking(HttpServletRequest request) {
-        String userStrId = (String) request.getAttribute("userId");
-        Long userId = null;
-        if (userStrId != null) {
-            userId = Long.parseLong(userStrId);
-        }
+        Long userId = (Long) request.getAttribute("userId");
 
         CumulativeRankResponseDto ranks = rankService.getCumulativeRanking(userId);
         return ResponseEntity.ok(ranks);
@@ -45,11 +38,7 @@ public class RankController {
 
     @GetMapping("/donation")
     public ResponseEntity<DonationRankResponseDto> getDonationRanking(HttpServletRequest request) {
-        String userStrId = (String) request.getAttribute("userId");
-        Long userId = null;
-        if (userStrId != null) {
-            userId = Long.parseLong(userStrId);
-        }
+        Long userId = (Long) request.getAttribute("userId");
 
         DonationRankResponseDto ranks = rankService.getDonationRanking(userId);
         return ResponseEntity.ok(ranks);

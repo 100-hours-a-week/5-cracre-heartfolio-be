@@ -1,5 +1,6 @@
 package com.heartfoilo.demo.domain.portfolio.api;
 
+import com.heartfoilo.demo.domain.portfolio.service.GetTotalStocksService;
 import com.heartfoilo.demo.domain.portfolio.service.GetTotalStocksServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,11 @@ import java.util.Map;
 @RequestMapping("/api/portfolio")
 public class GetTotalStocksController {
     @Autowired
-    private GetTotalStocksServiceImpl getTotalStocksServiceImpl;
+    private GetTotalStocksService getTotalStocksService;
     @GetMapping("/totalStocks")
-    public ResponseEntity<Map<String,Object>> getTotalStocks(HttpServletRequest request){
-        String userStrId = (String) request.getAttribute("userId");
-        if (userStrId == null) {
+    public ResponseEntity<?> getTotalStocks(HttpServletRequest request){
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
             // 비로그인 사용자 처리
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -30,15 +31,17 @@ public class GetTotalStocksController {
         if (token == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return getTotalStocksServiceImpl.getTotalStocks(Long.parseLong(userStrId));
+        return getTotalStocksService.getTotalStocks(userId);
     }
 
     @GetMapping("/totalStocks/{userId}")
-    public ResponseEntity<Map<String,Object>> getUserTotalStocks(HttpServletRequest request, @PathVariable("userId") Long userId){
+    public ResponseEntity<?> getUserTotalStocks(HttpServletRequest request, @PathVariable("userId") Long userId){
         String userStrId = (String) request.getAttribute("userId");
         if (userStrId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } // 로그인 안된 사용자는 401로 return
-        return getTotalStocksServiceImpl.getTotalStocks(userId);
+
+        } // 토큰이 만료된 경우 -> 401 return
+        return getTotalStocksService.getTotalStocks(userId);
+
     }
 }

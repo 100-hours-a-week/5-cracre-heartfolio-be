@@ -28,12 +28,12 @@ public class UserController {
 
     @GetMapping("/info")
     public ResponseEntity<?> getUserInfo(HttpServletRequest request){
-        String userStrId = (String) request.getAttribute("userId");
-        if (userStrId == null) {
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 빈 Map 반환
         }
 
-        return userService.getMypageInfo(Long.valueOf(userStrId));
+        return userService.getMypageInfo(userId);
 
 
 
@@ -42,12 +42,12 @@ public class UserController {
     @PostMapping("/fixNickname")
     public ResponseEntity<?> fixUserInfo(HttpServletRequest request,@RequestBody Map<String, String> requestBody){
         String nickname = requestBody.get("nickname");
-        String userStrId = (String) request.getAttribute("userId");
-        if (userStrId == null) {
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 빈 Map 반환
         }
 
-        return userService.fixNickname(Long.valueOf(userStrId),nickname);
+        return userService.fixNickname(userId,nickname);
 
 
 

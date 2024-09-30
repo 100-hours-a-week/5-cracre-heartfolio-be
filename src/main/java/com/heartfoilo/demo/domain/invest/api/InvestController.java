@@ -19,22 +19,21 @@ public class InvestController {
     @PostMapping("/order")
     public ResponseEntity<?> order(@RequestBody InvestRequestDto getInfoRequestDto, HttpServletRequest request){
 
-        String userStrId = (String) request.getAttribute("userId");
-        System.out.println(userStrId);
-        if (userStrId == null) {
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
             return ResponseEntity.ok(Collections.emptyMap()); // 빈 Map 반환
         }
-        return investServiceImpl.order(getInfoRequestDto, Long.parseLong(userStrId));
+        return investServiceImpl.order(getInfoRequestDto, userId);
 
     }
 
     @DeleteMapping("/order")
     public ResponseEntity<?> sell(@RequestBody InvestRequestDto getInfoRequestDto, HttpServletRequest request){
-        String userStrId = (String) request.getAttribute("userId");
-        if (userStrId == null) {
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
             return ResponseEntity.ok(Collections.emptyMap()); // 빈 Map 반환
         }
-        return investServiceImpl.sell(getInfoRequestDto, Long.parseLong(userStrId));
+        return investServiceImpl.sell(getInfoRequestDto, userId);
     }
 
 }

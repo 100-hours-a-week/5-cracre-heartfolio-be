@@ -21,20 +21,20 @@ public class FortuneController {
     @GetMapping
     public ResponseEntity<String> getDailyFortune(HttpServletRequest request)
         throws NoAuthInfoException, NotRegisterDailyFortune {
-        String userId = (String)(request.getAttribute("userId"));
+        Long userId = (Long) request.getAttribute("userId");
         if(userId == null){
             throw new NoAuthInfoException();
         }
-        return ResponseEntity.ok(userService.getDailyFortune(Long.parseLong(userId)));
+        return ResponseEntity.ok(userService.getDailyFortune(userId));
     }
 
     @PostMapping
     public ResponseEntity<String> registDailyFortune(HttpServletRequest request)
         throws NoAuthInfoException {
-        String userId = (String)(request.getAttribute("userId"));
+        Long userId = (Long) request.getAttribute("userId");
         if(userId == null){
             throw new NoAuthInfoException();
         }
-        return ResponseEntity.ok(userService.registDailyFortune(Long.parseLong(userId)));
+        return ResponseEntity.ok(userService.registDailyFortune(userId));
     }
 }

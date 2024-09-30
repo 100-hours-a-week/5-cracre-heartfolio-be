@@ -1,5 +1,6 @@
 package com.heartfoilo.demo.domain.portfolio.service;
 
+import com.heartfoilo.demo.domain.portfolio.dto.responseDto.StockResponseDto;
 import com.heartfoilo.demo.domain.portfolio.entity.TotalAssets;
 import com.heartfoilo.demo.domain.portfolio.repository.TotalAssetsRepository;
 import com.heartfoilo.demo.domain.stock.entity.Stock;
@@ -27,16 +28,16 @@ public class GetStocksServiceImpl implements GetStocksService{
     private final StockRepository stockRepository;
 
     @Override
-    public ResponseEntity<Map<String, Object>> getStocks(long userId) {
+    public ResponseEntity<List<StockResponseDto>> getStocks(long userId) {
         Optional<List<TotalAssets>> allAssets = totalAssetsRepository.findByUserId(userId);
         // TODO : 오류 수정
         if(allAssets.get().isEmpty()){
-            return ResponseEntity.ok(Collections.emptyMap()); // emptyMap 반환
+            return ResponseEntity.ok(new ArrayList<>());// emptyMap 반환
         }
 
 
 
-        List<Map<String, Object>> stockList = new ArrayList<>();
+        List<StockResponseDto> stockList = new ArrayList<>();
         for (TotalAssets asset : allAssets.get()) {
 
             Stock findStock = asset.getStock();
@@ -50,19 +51,16 @@ public class GetStocksServiceImpl implements GetStocksService{
 
             StockSocketInfoDto stockInfo = redisUtil.getStockInfoTemplate(asset.getStock().getSymbol()); // redis 정보 가져오는 코드
             long evalPrice = stockInfo.getCurPrice() * asset.getTotalQuantity(); // 현재가 * 보유 수량
-            Map<String, Object> stockMap = new HashMap<>();
-            stockMap.put("id", findStock.getId());
-            stockMap.put("stockName", stockName);
-            stockMap.put("evalPrice", evalPrice);
-            stockMap.put("sector", sector);
+            StockResponseDto stockDto = new StockResponseDto(
+                    findStock.getId(),
+                    stockName,
+                    evalPrice,
+                    sector
+            );
 
-            // 리스트에 추가
-            stockList.add(stockMap);
+            stockList.add(stockDto);
         }
-        Map<String, Object> response = new HashMap<>();
-        response.put("stocks", stockList);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(stockList);
 
 
     }
