@@ -33,15 +33,17 @@ public class GetInvestInfoController {
 
     @GetMapping("/investInfo/{userId}")
     public ResponseEntity<?> getUserInvestInfo(HttpServletRequest request,@PathVariable("userId") Long userId){
+
         Long userStrId = (Long) request.getAttribute("userId");
         if (userStrId == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }  // 이경우가 Bearer만 간 경우(토큰이 없는 경우) -> 400 return
         String token = (String) request.getAttribute("token");
 
-        if (token == null){
+
+        if (userStrId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } // 토큰이 만료된 경우 -> 401 return
+        } // 로그인 안된 사용자는 401로 return
         return ResponseEntity.ok(getInvestInfoServiceImpl.getInvestInfo(userId));
     }
 

@@ -38,13 +38,10 @@ public class GetTotalStocksController {
     public ResponseEntity<?> getUserTotalStocks(HttpServletRequest request, @PathVariable("userId") Long userId){
         String userStrId = (String) request.getAttribute("userId");
         if (userStrId == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }  // 이경우가 Bearer만 간 경우(토큰이 없는 경우) -> 400 return
-        String token = (String) request.getAttribute("token");
-
-        if (token == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
         } // 토큰이 만료된 경우 -> 401 return
         return getTotalStocksService.getTotalStocks(userId);
+
     }
 }

@@ -7,7 +7,7 @@ build/
 
 # Ignore GlobalExceptionHandler.java
 src/main/java/com/heartfoilo/demo/global/exception/GlobalExceptionHandler.java
-
+src/main/java/com/heartfoilo/demo/util/StockInfoPollingScheduler.java
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/

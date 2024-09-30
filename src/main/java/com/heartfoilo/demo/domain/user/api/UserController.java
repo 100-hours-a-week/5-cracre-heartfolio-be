@@ -25,11 +25,6 @@ public class UserController {
 
     private final UserService userService;
     private final RedisUtil redisUtil;
-    @GetMapping("/test")
-    public void test(){
-        redisUtil.setStockInfoTemplate("AAPL", StockSocketInfoDto.builder().symbol("AAPL").curPrice(2263600)
-            .openPrice(2200000).highPrice(2400000).lowPrice(2100000).earningValue(11000).earningRate(11.1f).build());
-    }
 
     @GetMapping("/info")
     public ResponseEntity<?> getUserInfo(HttpServletRequest request){
