@@ -1,5 +1,6 @@
 package com.heartfoilo.demo.domain.portfolio.service;
 
+import com.heartfoilo.demo.domain.portfolio.dto.responseDto.TotalAssetsResponseDto;
 import com.heartfoilo.demo.domain.portfolio.entity.TotalAssets;
 import com.heartfoilo.demo.domain.portfolio.repository.TotalAssetsRepository;
 import com.heartfoilo.demo.domain.stock.entity.Stock;
@@ -33,13 +34,13 @@ public class GetTotalStocksServiceImpl implements GetTotalStocksService{
     private final TotalAssetsRepository totalAssetsRepository;
     private final RedisUtil redisUtil;
     @Override
-    public ResponseEntity<Map<String,Object>> getTotalStocks(long userId){
+    public ResponseEntity<List<TotalAssetsResponseDto>> getTotalStocks(long userId){
         Optional<List<TotalAssets>> totalAssets = totalAssetsRepository.findByUserId(userId);
 
-        if(totalAssets == null){
-            return ResponseEntity.ok(Collections.emptyMap());
+        if (totalAssets.isEmpty()) {
+            return ResponseEntity.ok(new ArrayList<>());
         } // 주식 보유 존재x시 예외처리
-        List<Map<String, Object>> totalAssetsList = new ArrayList<>();
+        List<TotalAssetsResponseDto> totalAssetsList = new ArrayList<>();
 
         TotalAssets[] assetsArray = totalAssets.get().toArray(new TotalAssets[0]);
         for (TotalAssets asset : assetsArray) {
@@ -64,17 +65,22 @@ public class GetTotalStocksServiceImpl implements GetTotalStocksService{
             DecimalFormat df = new DecimalFormat("#.##");
             profitPercentage = Double.parseDouble(df.format(profitPercentage));
 
-            Map<String, Object> stockMap = createStockMap(findStock.getId(), stockName, totalQuantity, purchaseAvgPrice,
-                    totalPurchasePrice, evalValue, evalProfit, profitPercentage);
+            TotalAssetsResponseDto assetsDto = new TotalAssetsResponseDto(
+                    findStock.getId(),
+                    stockName,
+                    totalQuantity,
+                    purchaseAvgPrice,
+                    totalPurchasePrice,
+                    evalValue,
+                    evalProfit,
+                    profitPercentage
+            );
 
-
-            // 리스트에 추가
-            totalAssetsList.add(stockMap);
+            totalAssetsList.add(assetsDto);
         }
-        Map<String, Object> response = new HashMap<>();
-        response.put("stocks", totalAssetsList);
 
-        return ResponseEntity.ok(response);
+
+        return ResponseEntity.ok(totalAssetsList);
 
 
 

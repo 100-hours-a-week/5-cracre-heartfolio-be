@@ -21,8 +21,8 @@ public class GetStocksController {
     private GetStocksServiceImpl getStocksServiceImpl;
     @GetMapping("/stock") // 자산 구성 조회 API
     public ResponseEntity<?> getStocks(HttpServletRequest request){
-        String userStrId = (String) request.getAttribute("userId");
-        if (userStrId == null) {
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
             // 비로그인 사용자 처리
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -31,12 +31,12 @@ public class GetStocksController {
         if (token == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return getStocksServiceImpl.getStocks(Long.parseLong(userStrId));
+        return getStocksServiceImpl.getStocks(userId);
 
     }
     @GetMapping("/stock/{userId}") // 자산 구성 조회 API
     public ResponseEntity<?> getUserStocks(HttpServletRequest request,@PathVariable ("userId") Long userId){
-        String userStrId = (String) request.getAttribute("userId");
+        Long userStrId = (Long) request.getAttribute("userId");
         if (userStrId == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }  // 이경우가 Bearer만 간 경우(토큰이 없는 경우) -> 400 return

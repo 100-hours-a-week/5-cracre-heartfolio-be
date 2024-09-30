@@ -1,5 +1,6 @@
 package com.heartfoilo.demo.domain.portfolio.service;
 
+import com.heartfoilo.demo.domain.portfolio.dto.responseDto.AssetsResponseDto;
 import com.heartfoilo.demo.domain.portfolio.entity.Account;
 import com.heartfoilo.demo.domain.portfolio.entity.TotalAssets;
 import com.heartfoilo.demo.domain.portfolio.repository.PortfolioRepository;
@@ -23,7 +24,7 @@ public class GetAssetsServiceImpl implements GetAssetsService{
     private final TotalAssetsRepository totalAssetsRepository;
     private final RedisUtil redisUtil;
     @Override
-    public ResponseEntity<Map<String,Object>> getAssets(long userId) { // 보유 자산 조회 API
+    public ResponseEntity<AssetsResponseDto> getAssets(long userId) { // 보유 자산 조회 API
         Map<String, Object> responseMap = new HashMap<>();
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -52,15 +53,15 @@ public class GetAssetsServiceImpl implements GetAssetsService{
             }
         }
         // 값들을 Map에 추가
-        responseMap.put("cash", cash); // 보유 캐시
-        responseMap.put("totalPurchase", totalPurchase); // 총매수금액
-        responseMap.put("totalAmount", totalValue + cash); // 총 자산
-        responseMap.put("totalValue", totalValue); // 총평가금액
-        double profitRate = totalPurchase > 0 ? (double)(totalValue - totalPurchase) * 100 / totalPurchase : 0;
+        long totalAmount = totalValue + cash; // 총 자산
+        double profitRate = totalPurchase > 0 ? (double) (totalValue - totalPurchase) * 100 / totalPurchase : 0;
+
+        // 수익률 포맷팅
         DecimalFormat df = new DecimalFormat("#.##");
         profitRate = Double.parseDouble(df.format(profitRate));
-        responseMap.put("profitRate", profitRate);
 
-        return ResponseEntity.ok(responseMap);
+        // DTO 생성
+        AssetsResponseDto responseDto = new AssetsResponseDto(cash, totalPurchase, totalAmount, totalValue, profitRate);
+        return ResponseEntity.ok(responseDto);
     }
 }

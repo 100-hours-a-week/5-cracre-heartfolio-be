@@ -42,8 +42,8 @@ public class HeartfolioInterceptor implements HandlerInterceptor {
                         .parseClaimsJws(token)
                         .getBody();
 
-                String userId = claims.getSubject();
-                request.setAttribute("userId", userId);
+                Long userId = Long.valueOf(claims.getSubject());
+                request.setAttribute("userId", userId); // 핸들러에서 userId Long으로 변경
 
             } catch (ExpiredJwtException e) {
                 // response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "토큰이 만료되었습니다.");
