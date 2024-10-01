@@ -45,7 +45,7 @@ public class ApiSearchNewsService {
         }
 
         String apiURL = "https://openapi.naver.com/v1/search/news?query=" + encodedQuery
-                +"&display=30&sort=sim";
+                +"&display=50&sort=sim";
 
         Map<String, String> requestHeaders = new HashMap<>();
         requestHeaders.put("X-Naver-Client-Id", CLIENT_ID);
@@ -69,14 +69,14 @@ public class ApiSearchNewsService {
             List<NewsItemDto> filteredItems = new ArrayList<>();
             for(NewsItemDto newItem : items) {
                 boolean isDuplicate = false;
-                String newItemTitle = removePunctuation(newItem.getTitle());
+                String newItemTitle = extractKorean(newItem.getTitle());
                 for (NewsItemDto existingItem : filteredItems) {
-                    String existingItemTitle = removePunctuation(existingItem.getTitle());
+                    String existingItemTitle = extractKorean(existingItem.getTitle());
                     int distance = levenshtein.apply(existingItemTitle, newItemTitle);
                     int maxLen = Math.max(existingItemTitle.length(), newItemTitle.length());
 
                     // 제목 유사도 10% 이하 차이면 중복으로 간주
-                    if (distance <= 0.2 * maxLen) {
+                    if (distance <= 0.5 * maxLen) {
                         isDuplicate = true;
                         break;
                     }
@@ -105,6 +105,11 @@ public class ApiSearchNewsService {
         return text.replaceAll("[\\p{Punct}]", "").replaceAll("\\s+", " ").trim();
     }
 
+    // 한글만 추출하는 메서드
+    private String extractKorean(String text) {
+        if (text == null) return "";
+        return text.replaceAll("[^\\uAC00-\\uD7A3]", ""); // 한글만 남기고 모두 제거
+    }
 
     private static String get(String apiUrl, Map<String, String> requestHeaders) {
         HttpURLConnection con = connect(apiUrl);
