@@ -15,11 +15,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +31,7 @@ public class ApiSearchNewsService {
     @Value("${newsapi.client-secret}")
     private String CLIENT_SECRET; // 애플리케이션 클라이언트 시크릿
     private final RedisUtil redisUtil;
+    LevenshteinDistance levenshtein = new LevenshteinDistance();
 
     public NewsResponseDto searchNews(String query) {
         if(redisUtil.hasDailyNews(query)){
@@ -45,7 +45,7 @@ public class ApiSearchNewsService {
         }
 
         String apiURL = "https://openapi.naver.com/v1/search/news?query=" + encodedQuery
-                +"&display=20&sort=sim";
+                +"&display=30&sort=sim";
 
         Map<String, String> requestHeaders = new HashMap<>();
         requestHeaders.put("X-Naver-Client-Id", CLIENT_ID);
@@ -57,7 +57,7 @@ public class ApiSearchNewsService {
             ObjectMapper objectMapper = new ObjectMapper();
             NewsResponseDto responseDto = objectMapper.readValue(responseBody, NewsResponseDto.class);
 
-            List<NewsItemDto> filteredItems = responseDto.getItems().stream()
+            List<NewsItemDto> items = responseDto.getItems().stream()
                     .filter(item -> containsKorean(item.getTitle()))
                     .peek(item -> {
                         item.setTitle(cleanText(item.getTitle())); // 제목에서 불필요한 태그 제거
@@ -65,6 +65,28 @@ public class ApiSearchNewsService {
                         item.setFormattedPubDate(item.getPubDate()); // 날짜 형식 변경
                     })
                     .collect(Collectors.toList());
+
+            List<NewsItemDto> filteredItems = new ArrayList<>();
+            for(NewsItemDto newItem : items) {
+                boolean isDuplicate = false;
+                String newItemTitle = removePunctuation(newItem.getTitle());
+                for (NewsItemDto existingItem : filteredItems) {
+                    String existingItemTitle = removePunctuation(existingItem.getTitle());
+                    int distance = levenshtein.apply(existingItemTitle, newItemTitle);
+                    int maxLen = Math.max(existingItemTitle.length(), newItemTitle.length());
+
+                    // 제목 유사도 10% 이하 차이면 중복으로 간주
+                    if (distance <= 0.2 * maxLen) {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+
+                if (!isDuplicate) {
+                    filteredItems.add(newItem);
+                }
+                if(filteredItems.size() == 20) break;
+            }
 
             responseDto.setItems(filteredItems);
             redisUtil.setDailyNewsTemplate(query, DailyNewsDto.builder().date(LocalDate.now()).newsResponseDto(responseDto).build());
@@ -77,6 +99,12 @@ public class ApiSearchNewsService {
     private boolean containsKorean(String text) {
         return text != null && text.matches(".*[\\uAC00-\\uD7A3].*");
     }
+
+    private String removePunctuation(String text) {
+        if (text == null) return "";
+        return text.replaceAll("[\\p{Punct}]", "").replaceAll("\\s+", " ").trim();
+    }
+
 
     private static String get(String apiUrl, Map<String, String> requestHeaders) {
         HttpURLConnection con = connect(apiUrl);
