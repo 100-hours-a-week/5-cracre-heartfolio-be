@@ -20,10 +20,10 @@ public class FortuneController {
 
     @GetMapping
     public ResponseEntity<String> getDailyFortune(HttpServletRequest request)
-        throws NoAuthInfoException, NotRegisterDailyFortune {
+        throws NotRegisterDailyFortune {
         Long userId = (Long) request.getAttribute("userId");
         if(userId == null){
-            throw new NoAuthInfoException();
+            return ResponseEntity.ok(null);
         }
         return ResponseEntity.ok(userService.getDailyFortune(userId));
     }
