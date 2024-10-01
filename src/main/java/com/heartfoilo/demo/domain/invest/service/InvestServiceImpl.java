@@ -16,14 +16,12 @@ import com.heartfoilo.demo.domain.user.repository.UserRepository;
 import com.heartfoilo.demo.domain.webSocket.dto.StockSocketInfoDto;
 import com.heartfoilo.demo.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -48,15 +46,15 @@ public class InvestServiceImpl implements InvestService{
                 .orElseThrow(() -> new RuntimeException("Stock not found with id: " + stockId));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
-        Order orders = new Order();
-        orders.setUser(user);
-        orders.setOrderCategory(orderCategory);
-        orders.setOrderDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
-        orders.setOrderAmount(nowQuantity);
-        orders.setOrderPrice(nowAvgPrice);
-        orders.setTotalAmount(nowQuantity * nowAvgPrice);
-        orders.setStock(stock);
-        orders.setUser(user);
+        Order orders = Order.builder()
+                .orderCategory(orderCategory)
+                .orderDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                .orderAmount(nowQuantity)
+                .orderPrice(nowAvgPrice)
+                .totalAmount(nowQuantity * nowAvgPrice)
+                .stock(stock)
+                .user(user)
+                .build();
         return orders;
     } // order 객체 새로 만들어주는 기능
 
