@@ -41,6 +41,7 @@ public class InvestServiceImpl implements InvestService{
     private final RankingRepository rankingRepository;
 
     private final RedisUtil redisUtil;
+    @Override
     public Order createOrder(Long userId, String orderCategory, Long nowQuantity, int nowAvgPrice, Long stockId) {
         Stock stock = stockRepository.findById(stockId)
                 .orElseThrow(() -> new RuntimeException("Stock not found with id: " + stockId));
@@ -135,6 +136,7 @@ public class InvestServiceImpl implements InvestService{
     }
 
 
+    @Override
     public ResponseEntity<?> sell(InvestRequestDto getInfoRequestDto,long userId){
         Long stockId = getInfoRequestDto.getStockId();
         Long quantity = getInfoRequestDto.getQuantity(); // 요청한 수량
