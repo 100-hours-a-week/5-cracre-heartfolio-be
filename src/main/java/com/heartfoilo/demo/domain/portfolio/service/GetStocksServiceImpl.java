@@ -28,16 +28,16 @@ public class GetStocksServiceImpl implements GetStocksService{
     private final StockRepository stockRepository;
 
     @Override
-    public ResponseEntity<List<StockResponseDto>> getStocks(long userId) {
+    public ResponseEntity<Map<String,Object>> getStocks(long userId) {
         Optional<List<TotalAssets>> allAssets = totalAssetsRepository.findByUserId(userId);
         // TODO : 오류 수정
         if(allAssets.get().isEmpty()){
-            return ResponseEntity.ok(new ArrayList<>());// emptyMap 반환
+            return ResponseEntity.ok(Collections.emptyMap());// emptyMap 반환
         }
 
 
 
-        List<StockResponseDto> stockList = new ArrayList<>();
+        Map<String,Object> stockList = new HashMap<>();
         for (TotalAssets asset : allAssets.get()) {
 
             Stock findStock = asset.getStock();
@@ -58,7 +58,7 @@ public class GetStocksServiceImpl implements GetStocksService{
                     sector
             );
 
-            stockList.add(stockDto);
+            stockList.put("stocks",stockDto);
         }
         return ResponseEntity.ok(stockList);
 

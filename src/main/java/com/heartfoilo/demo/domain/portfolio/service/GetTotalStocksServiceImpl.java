@@ -15,7 +15,7 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @Service
-public class GetTotalStocksServiceImpl implements GetTotalStocksService{
+public class GetTotalStocksServiceImpl implements GetTotalStocksService {
 
     public Map<String, Object> createStockMap(Long stockId, String stockName, Long totalQuantity,
                                               Long purchaseAvgPrice, Long totalPurchasePrice,
@@ -31,32 +31,28 @@ public class GetTotalStocksServiceImpl implements GetTotalStocksService{
         stockMap.put("profitPercentage", profitPercentage); //
         return stockMap;
     }
+
     private final TotalAssetsRepository totalAssetsRepository;
     private final RedisUtil redisUtil;
+
     @Override
-    public ResponseEntity<List<TotalAssetsResponseDto>> getTotalStocks(long userId){
+    public ResponseEntity<Map<String,Object>> getTotalStocks(long userId){
         Optional<List<TotalAssets>> totalAssets = totalAssetsRepository.findByUserId(userId);
 
-        if (totalAssets.isEmpty()) {
-            return ResponseEntity.ok(new ArrayList<>());
+        if(totalAssets == null){
+            return ResponseEntity.ok(Collections.emptyMap());
         } // 주식 보유 존재x시 예외처리
-        List<TotalAssetsResponseDto> totalAssetsList = new ArrayList<>();
+        List<Map<String, Object>> totalAssetsList = new ArrayList<>();
 
         TotalAssets[] assetsArray = totalAssets.get().toArray(new TotalAssets[0]);
         for (TotalAssets asset : assetsArray) {
-
             Stock findStock = asset.getStock();
             String stockName = findStock.getName();
             Long totalQuantity = asset.getTotalQuantity();
             Long purchaseAvgPrice = asset.getPurchaseAvgPrice(); // 여기까지가 정적으로 받아오는 값
             Long totalPurchasePrice = totalQuantity * purchaseAvgPrice; // 총매수값
-
-
-
             // TODO : REDIS 내에 값이 없는 경우 예외처리 필요 //
             StockSocketInfoDto stockInfo = redisUtil.getStockInfoTemplate(asset.getStock().getSymbol()); // TODO: NULL값 에러 발생
-
-
             int nowPrice = stockInfo.getCurPrice();
             // 여기서부터 3개는 소켓 변동값 ##
             Long evalValue = totalQuantity * nowPrice; // 현재 평가금액
@@ -65,22 +61,17 @@ public class GetTotalStocksServiceImpl implements GetTotalStocksService{
             DecimalFormat df = new DecimalFormat("#.##");
             profitPercentage = Double.parseDouble(df.format(profitPercentage));
 
-            TotalAssetsResponseDto assetsDto = new TotalAssetsResponseDto(
-                    findStock.getId(),
-                    stockName,
-                    totalQuantity,
-                    purchaseAvgPrice,
-                    totalPurchasePrice,
-                    evalValue,
-                    evalProfit,
-                    profitPercentage
-            );
+            Map<String, Object> stockMap = createStockMap(findStock.getId(), stockName, totalQuantity, purchaseAvgPrice,
+                    totalPurchasePrice, evalValue, evalProfit, profitPercentage);
 
-            totalAssetsList.add(assetsDto);
+
+            // 리스트에 추가
+            totalAssetsList.add(stockMap);
         }
+        Map<String, Object> response = new HashMap<>();
+        response.put("stocks", totalAssetsList);
 
-
-        return ResponseEntity.ok(totalAssetsList);
+        return ResponseEntity.ok(response);
 
 
 

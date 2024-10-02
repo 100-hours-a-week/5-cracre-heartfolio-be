@@ -9,5 +9,5 @@ import java.util.Map;
 
 @Service
 public interface GetStocksService {
-    public ResponseEntity<List<StockResponseDto>> getStocks(long userId);
+    public ResponseEntity<Map<String,Object>> getStocks(long userId);
 }
