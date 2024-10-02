@@ -29,7 +29,7 @@ https://disquiet.io/product/heartfolio-1727164046296
 
 ## 수행 인원
 
-- 5명(백엔드 2 , 프론트엔드 1, DevOps 1, 관리자
+- 5명(백엔드 2 , 프론트엔드 1, DevOps 1, 관리자 1)
 
 ## 수행 기간
 
