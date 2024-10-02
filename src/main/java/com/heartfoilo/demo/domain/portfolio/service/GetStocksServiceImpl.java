@@ -28,16 +28,16 @@ public class GetStocksServiceImpl implements GetStocksService{
     private final StockRepository stockRepository;
 
     @Override
-    public ResponseEntity<Map<String,Object>> getStocks(long userId) {
+    public ResponseEntity<Map<String, Object>> getStocks(long userId) {
         Optional<List<TotalAssets>> allAssets = totalAssetsRepository.findByUserId(userId);
         // TODO : 오류 수정
         if(allAssets.get().isEmpty()){
-            return ResponseEntity.ok(Collections.emptyMap());// emptyMap 반환
+            return ResponseEntity.ok(Collections.emptyMap()); // emptyMap 반환
         }
 
 
 
-        Map<String,Object> stockList = new HashMap<>();
+        List<Map<String, Object>> stockList = new ArrayList<>();
         for (TotalAssets asset : allAssets.get()) {
 
             Stock findStock = asset.getStock();
@@ -51,18 +51,22 @@ public class GetStocksServiceImpl implements GetStocksService{
 
             StockSocketInfoDto stockInfo = redisUtil.getStockInfoTemplate(asset.getStock().getSymbol()); // redis 정보 가져오는 코드
             long evalPrice = stockInfo.getCurPrice() * asset.getTotalQuantity(); // 현재가 * 보유 수량
-            StockResponseDto stockDto = new StockResponseDto(
-                    findStock.getId(),
-                    stockName,
-                    evalPrice,
-                    sector
-            );
+            Map<String, Object> stockMap = new HashMap<>();
+            stockMap.put("id", findStock.getId());
+            stockMap.put("stockName", stockName);
+            stockMap.put("evalPrice", evalPrice);
+            stockMap.put("sector", sector);
 
-            stockList.put("stocks",stockDto);
+            // 리스트에 추가
+            stockList.add(stockMap);
         }
-        return ResponseEntity.ok(stockList);
+        Map<String, Object> response = new HashMap<>();
+        response.put("stocks", stockList);
+
+        return ResponseEntity.ok(response);
 
 
     }
+
 
 }
