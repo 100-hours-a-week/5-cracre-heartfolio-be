@@ -43,7 +43,14 @@ public class FortuneServiceImpl implements FortuneService {
         }
         int id = random.nextInt(191) + 1;
         Fortune fortune = fortuneRepository.findById((long) id).orElseThrow();
-        dailyFortuneRepository.save(DailyFortune.builder().user(userRepository.findById(userId).get()).fortune(fortune).date(LocalDate.now()).build());
+        User user = userRepository.findById(userId).orElseThrow();
+        Optional<DailyFortune> dailyFortune = dailyFortuneRepository.findByUser(user);
+        if(dailyFortune.isEmpty()){
+            dailyFortuneRepository.save(DailyFortune.builder().user(user).fortune(fortune).date(LocalDate.now()).build());
+        }else {
+            dailyFortune.get().update(fortune);
+            dailyFortuneRepository.save(dailyFortune.get());
+        }
         return fortune.getContent();
     }
 
