@@ -37,4 +37,9 @@ public class DailyFortune {
     private Fortune fortune;
 
     private LocalDate date;
+
+    public void update(Fortune fortune){
+        this.fortune = fortune;
+        this.date = LocalDate.now();
+    }
 }
