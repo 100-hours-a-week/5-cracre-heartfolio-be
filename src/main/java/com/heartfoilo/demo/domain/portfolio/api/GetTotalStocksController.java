@@ -36,7 +36,7 @@ public class GetTotalStocksController {
 
     @GetMapping("/totalStocks/{userId}")
     public ResponseEntity<?> getUserTotalStocks(HttpServletRequest request, @PathVariable("userId") Long userId){
-        String userStrId = (String) request.getAttribute("userId");
+        Long userStrId = (Long) request.getAttribute("userId");
         if (userStrId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
