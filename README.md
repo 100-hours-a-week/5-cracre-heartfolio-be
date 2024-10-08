@@ -29,7 +29,10 @@ https://disquiet.io/product/heartfolio-1727164046296
 
 ## 수행 인원
 
-- 5명(백엔드 2 , 프론트엔드 1, DevOps 1, 관리자 1)
+| [이름1](https://github.com/이름1) | [이름2](https://github.com/이름2) | [이름3](https://github.com/이름3) | [이름4](https://github.com/이름4) | [이름5](https://github.com/이름5) |
+|:---:|:---:|:---:|:---:|:---:|
+| BE | BE | FE | DevOps | 관리자 |
+
 
 ## 수행 기간
 
@@ -37,17 +40,17 @@ https://disquiet.io/product/heartfolio-1727164046296
 
 ## 개발 환경
 
-- Spring Boot, React
+<img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> , <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
 
 ## 사용 언어
 
-- Java , TypeScript
+<img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">
 
 ## 데이터베이스
 
-- MariaDB
+<img src="https://img.shields.io/badge/mariaDB-003545?style=for-the-badge&logo=mariaDB&logoColor=white">
 
-Github
+<img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
 
 https://github.com/100-hours-a-week/5-team-cracre-heartfolio-fe
 
