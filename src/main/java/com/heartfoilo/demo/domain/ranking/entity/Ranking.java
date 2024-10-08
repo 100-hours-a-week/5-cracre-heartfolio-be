@@ -4,6 +4,9 @@ import com.heartfoilo.demo.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -29,11 +32,15 @@ public class Ranking {
     @Column(nullable = false)
     private Long donation;
 
+    @Column(nullable = false)
+    private LocalDateTime updateDate;
+
     public Ranking(User user) {
         this.user = user;
         this.sumReturn = 0.0f;
         this.monthlyReturn = 0.0f;
         this.donation = 0L;
+        this.updateDate = LocalDateTime.now();
     }
     public void updateMonthlyReturn(float newMonthlyReturn) {
         this.monthlyReturn = newMonthlyReturn;
@@ -45,4 +52,6 @@ public class Ranking {
     }
 
     public void updateDonation(Long donation) { this.donation = donation; }
+
+    public void setUpdateDate(LocalDateTime time) { this.updateDate = time; }
 }

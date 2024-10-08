@@ -18,13 +18,12 @@ import java.util.stream.Collectors;
 public class RankServiceImpl implements RankService {
 
     private final RankingRepository rankingRepository;
-    private final UserRepository userRepository;
 
     @Override
     public MonthlyRankResponseDto getMonthlyRanking(Long userId) {
         Integer monthlyRank = (userId == null) ? -1 : rankingRepository.findUserRankByMonthlyReturn(userId).orElse(-1);
 
-        List<Ranking> ranks = rankingRepository.findTop10ByOrderByMonthlyReturnDesc();
+        List<Ranking> ranks = rankingRepository.findTop10MonthlyRankings();
         if (ranks.isEmpty()) {
             return new MonthlyRankResponseDto(monthlyRank, Collections.emptyList());
         }
@@ -44,7 +43,7 @@ public class RankServiceImpl implements RankService {
     public CumulativeRankResponseDto getCumulativeRanking(Long userId) {
         Integer CumulativeRank = (userId == null) ? -1 : rankingRepository.findUserRankBySumReturn(userId).orElse(-1);
 
-        List<Ranking> ranks = rankingRepository.findTop10ByOrderBySumReturnDesc();
+        List<Ranking> ranks = rankingRepository.findTop10SumRankings();
         if (ranks.isEmpty()) {
             return new CumulativeRankResponseDto(CumulativeRank, Collections.emptyList());
         }
@@ -64,7 +63,7 @@ public class RankServiceImpl implements RankService {
     public DonationRankResponseDto getDonationRanking(Long userId) {
         Integer DonationRank = (userId == null) ? -1 : rankingRepository.findUserRankByDonation(userId).orElse(-1);
 
-        List<Ranking> ranks = rankingRepository.findTop10ByOrderByDonationDescIdAsc();
+        List<Ranking> ranks = rankingRepository.findTop10DonationRankings();
         if (ranks.isEmpty()) {
             return new DonationRankResponseDto(DonationRank, Collections.emptyList());
         }
