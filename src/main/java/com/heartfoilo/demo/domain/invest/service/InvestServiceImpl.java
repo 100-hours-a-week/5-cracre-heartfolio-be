@@ -182,6 +182,7 @@ public class InvestServiceImpl implements InvestService{
 
         float existingMonthlyReturn = userRanking.getMonthlyReturn(); // 기존 월별 수익률
         float existingSumReturn = userRanking.getSumReturn(); // 기존 누적 수익률
+        LocalDateTime lastUpdateDate = userRanking.getUpdateDate();
 
         float newMonthlyReturn = existingMonthlyReturn + profitRate;
         float newSumReturn = existingSumReturn + profitRate;
@@ -189,6 +190,7 @@ public class InvestServiceImpl implements InvestService{
 
         userRanking.updateMonthlyReturn(newMonthlyReturn);
         userRanking.updateSumReturn(newSumReturn);
+        userRanking.setUpdateDate(lastUpdateDate);
 
         rankingRepository.save(userRanking);
 
