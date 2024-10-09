@@ -53,11 +53,9 @@ public class Account {
 
     }
     public void ChangeTotalPurchase(Long Value){
+        this.totalPurchase -= Value;
         if (this.totalPurchase < 0){
             this.totalPurchase = 0L;
-        }
-        else{
-            this.totalPurchase -= Value;
         }
     }
     public void BuyStock(Long totalAmount){
