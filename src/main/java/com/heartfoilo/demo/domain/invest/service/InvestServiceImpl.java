@@ -171,8 +171,7 @@ public class InvestServiceImpl implements InvestService{
         account.ChangeCash(quantity * price);
 
         long profit = (price - nowAvgPrice) * quantity;
-
-        float profitRate = (profit / (float) cash) * 100;
+        float profitRate = (profit / (float) (nowAvgPrice * quantity)) * 100;
         profitRate = Math.round(profitRate * 10) / 10.0f;
 
         User user = userRepository.findById(userId)
