@@ -169,7 +169,7 @@ public class InvestServiceImpl implements InvestService{
         Long totalPurchase = account.getTotalPurchase();
 
         account.ChangeCash(quantity * price);
-
+        account.ChangeTotalPurchase(quantity * totalAssets.getPurchaseAvgPrice());
         long profit = (price - nowAvgPrice) * quantity;
 
         float profitRate = (profit / (float) cash) * 100;
@@ -195,6 +195,7 @@ public class InvestServiceImpl implements InvestService{
         portfolioRepository.save(account);
         if (nowQuantity == 0) {
             totalAssetsRepository.delete(totalAssets);
+
             return ResponseEntity.ok("자산이 전부 판매되어 삭제되었습니다.");
         } else {
             // total_quantity가 0이 아니면 업데이트 후 저장
