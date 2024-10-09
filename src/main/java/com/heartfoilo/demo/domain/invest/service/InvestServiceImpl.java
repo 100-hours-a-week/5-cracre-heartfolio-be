@@ -93,7 +93,7 @@ public class InvestServiceImpl implements InvestService{
             Long totalPurchase = account.getTotalPurchase();
             if (cash >= quantity * price) {
                 account.ChangeCash(-(quantity * price)); // 여기서 cash , totalPurchase 모두 변경 가능
-
+                account.ChangeTotalPurchase(-(quantity * price));
             }
             else{
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잔액이 부족합니다.");
