@@ -1,5 +1,7 @@
 package com.heartfoilo.demo.config;
 
+import com.heartfoilo.demo.domain.webSocket.dto.StockSocketInfoDto;
+import com.heartfoilo.demo.dto.DailyNewsDto;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -10,6 +12,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
@@ -31,12 +34,20 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, StockSocketInfoDto> redisTemplateStock() {
+        RedisTemplate<String, StockSocketInfoDto> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(StockSocketInfoDto.class));
+        return redisTemplate;
+    }
 
+    @Bean
+    public RedisTemplate<String, DailyNewsDto> redisTemplateNews() {
+        RedisTemplate<String, DailyNewsDto> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(DailyNewsDto.class));
         return redisTemplate;
     }
 
