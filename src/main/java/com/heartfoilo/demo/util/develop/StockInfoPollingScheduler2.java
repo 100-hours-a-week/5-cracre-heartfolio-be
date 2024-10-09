@@ -1,9 +1,10 @@
-package com.heartfoilo.demo.util;
+package com.heartfoilo.demo.util.develop;
 
 import com.heartfoilo.demo.domain.stock.entity.Stock;
 import com.heartfoilo.demo.domain.stock.repository.StockRepository;
 import com.heartfoilo.demo.domain.webSocket.dto.StockSocketInfoDto;
 import com.heartfoilo.demo.dto.RequestOauthDto;
+import com.heartfoilo.demo.util.RedisUtil;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +59,6 @@ public class StockInfoPollingScheduler2 {
 
     @PostConstruct
     public void init() {
-        System.out.println("2");
         getStocks();
         token = getOauthToken();
     }
@@ -115,25 +115,31 @@ public class StockInfoPollingScheduler2 {
     }
 
     private String getOauthToken() {
-        Map result = webClient
+        Map result;
+        try {
+            result = webClient
                 .post()
                 .uri(uriBuilder ->
-                        uriBuilder
-                                .scheme("https")
-                                .host(host)
-                                .port(port)
-                                .path(oauthUrl)
-                                .build())
+                    uriBuilder
+                        .scheme("https")
+                        .host(host)
+                        .port(port)
+                        .path(oauthUrl)
+                        .build())
                 .bodyValue(RequestOauthDto.builder().grant_type("client_credentials").appkey(appKey)
-                        .appsecret(appSecret).build())
+                    .appsecret(appSecret).build())
                 .retrieve()
                 .bodyToMono(Map.class)
                 .block();
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return null;
+        }
         return String.valueOf(result.get("access_token"));
     }
 
     private void getStocks(){
         stocks = stockRepository.findAll().stream()
-            .filter(a -> a.getId() > 25 && a.getId() <= 49).toList();
+            .filter(a -> a.getId() > 12 && a.getId() <= 24).toList();
     }
 }
