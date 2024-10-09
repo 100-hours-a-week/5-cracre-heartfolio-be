@@ -62,6 +62,9 @@ public class Account {
         this.cash -= totalAmount;
         this.totalPurchase += totalAmount;
     }
+    public void ResetTotalPurchase(){
+        this.totalPurchase = 0L;
+    }
 
 
     public void ChangeDonationPayment(long donationPayment){

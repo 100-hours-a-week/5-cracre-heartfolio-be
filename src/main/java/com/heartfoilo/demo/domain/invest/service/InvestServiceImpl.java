@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -171,6 +172,7 @@ public class InvestServiceImpl implements InvestService{
 
         account.ChangeCash(quantity * price);
         account.ChangeTotalPurchase(quantity * totalAssets.getPurchaseAvgPrice());
+
         long profit = (price - nowAvgPrice) * quantity;
         float profitRate = (profit / (float) (nowAvgPrice * quantity)) * 100;
         profitRate = Math.round(profitRate * 10) / 10.0f;
@@ -195,6 +197,12 @@ public class InvestServiceImpl implements InvestService{
         rankingRepository.save(userRanking);
 
         portfolioRepository.save(account);
+        List<TotalAssets> totalAssetsChange = totalAssetsRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Account not found"));
+        if(totalAssetsChange.isEmpty()){
+            account.ResetTotalPurchase();
+            portfolioRepository.save(account);
+        }
+
         if (nowQuantity == 0) {
             totalAssetsRepository.delete(totalAssets);
 
