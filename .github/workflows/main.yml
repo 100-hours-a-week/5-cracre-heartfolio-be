@@ -7,7 +7,7 @@ on:
 
 jobs:
   backend-deploy:
-    runs-on: [self-hosted, Linux, X64, release]
+    runs-on: [self-hosted, Linux, X64, main]
     steps:
       # SOURCE 단계 - 저장소 Checkout 및 서브모듈 가져오기
       - name: Checkout-source code
