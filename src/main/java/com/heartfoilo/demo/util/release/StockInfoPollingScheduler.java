@@ -1,15 +1,17 @@
-package com.heartfoilo.demo.util;
+package com.heartfoilo.demo.util.release;
 
 import com.heartfoilo.demo.domain.stock.entity.Stock;
 import com.heartfoilo.demo.domain.stock.repository.StockRepository;
 import com.heartfoilo.demo.domain.webSocket.dto.StockSocketInfoDto;
 import com.heartfoilo.demo.dto.RequestOauthDto;
+import com.heartfoilo.demo.util.RedisUtil;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -20,6 +22,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Component
 @RequiredArgsConstructor
 @Slf4j
+@ConditionalOnProperty(name = "scheduler.polling", havingValue = "realServer")
 public class StockInfoPollingScheduler {
 
    private final StockRepository stockRepository;
@@ -55,14 +58,14 @@ public class StockInfoPollingScheduler {
    private String token;
 
    @PostConstruct
-   public void getStocks() {
-       stocks = stockRepository.findAll();
+   public void init() {
+       getStocks();
        token = getOauthToken();
    }
 
 
 
-   @Scheduled(initialDelayString = "5000", fixedRate = 500)
+   @Scheduled(initialDelayString = "1000", fixedRate = 550)
    public void pollingStockInfo() {
        String type = "NYS";
        idx = (idx + 1) % stocks.size();
@@ -111,20 +114,31 @@ public class StockInfoPollingScheduler {
    }
 
    private String getOauthToken() {
-       Map result = webClient
+       Map result;
+       try {
+           result = webClient
                .post()
                .uri(uriBuilder ->
-                       uriBuilder
-                               .scheme("https")
-                               .host(host)
-                               .port(port)
-                               .path(oauthUrl)
-                               .build())
+                   uriBuilder
+                       .scheme("https")
+                       .host(host)
+                       .port(port)
+                       .path(oauthUrl)
+                       .build())
                .bodyValue(RequestOauthDto.builder().grant_type("client_credentials").appkey(appKey)
-                       .appsecret(appSecret).build())
+                   .appsecret(appSecret).build())
                .retrieve()
                .bodyToMono(Map.class)
                .block();
+       }catch (Exception e){
+           log.error(e.getMessage());
+           return null;
+       }
        return String.valueOf(result.get("access_token"));
    }
+
+    private void getStocks(){
+        stocks = stockRepository.findAll().stream()
+            .filter(a -> a.getId() > 0 && a.getId() <= 12).toList();
+    }
 }
