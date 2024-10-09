@@ -1,9 +1,24 @@
+# General files and directories to ignore
 HELP.md
 .gradle
 build/
+# macOS system files
+.DS_Store
+
+# Ignore GlobalExceptionHandler.java
+src/main/java/com/heartfoilo/demo/global/exception/GlobalExceptionHandler.java
+src/main/java/com/heartfoilo/demo/util/StockInfoPollingScheduler.java
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+application.yml
+/src/main/resources/*.yml
+
+# Optional: Do not ignore specific *.yml files if needed
+# For example, you can exclude other specific yml files from being ignored
+!**/src/main/resources/application-secret.yml
+
+# Ignore specific IDE and build tool related files and directories
 
 ### STS ###
 .apt_generated
@@ -14,6 +29,7 @@ build/
 .springBeans
 .sts4-cache
 bin/
+/src/test/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
@@ -26,7 +42,6 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
-### NetBeans ###
 /nbproject/private/
 /nbbuild/
 /dist/
@@ -35,3 +50,4 @@ out/
 
 ### VS Code ###
 .vscode/
+.DS_Store
