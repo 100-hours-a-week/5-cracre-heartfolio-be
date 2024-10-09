@@ -200,7 +200,9 @@ public class InvestServiceImpl implements InvestService{
         List<TotalAssets> totalAssetsChange = totalAssetsRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Account not found"));
         if(totalAssetsChange.isEmpty()){
             account.ResetTotalPurchase();
+            portfolioRepository.save(account);
         }
+
         if (nowQuantity == 0) {
             totalAssetsRepository.delete(totalAssets);
 
