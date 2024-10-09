@@ -128,6 +128,7 @@ public class InvestServiceImpl implements InvestService{
         else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잔액이 부족합니다.");
         }
+        account.ChangeTotalPurchase(-(quantity * price));
         portfolioRepository.save(account);
 
 
