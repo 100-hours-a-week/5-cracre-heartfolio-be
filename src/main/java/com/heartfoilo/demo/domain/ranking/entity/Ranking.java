@@ -53,5 +53,7 @@ public class Ranking {
 
     public void updateDonation(Long donation) { this.donation = donation; }
 
-    public void setUpdateDate(LocalDateTime time) { this.updateDate = time; }
+    @PrePersist
+    @PreUpdate
+    public void setUpdateDate() { this.updateDate = LocalDateTime.now(); }
 }
