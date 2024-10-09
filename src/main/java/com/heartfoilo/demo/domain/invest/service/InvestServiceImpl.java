@@ -190,7 +190,7 @@ public class InvestServiceImpl implements InvestService{
 
         userRanking.updateMonthlyReturn(newMonthlyReturn);
         userRanking.updateSumReturn(newSumReturn);
-        userRanking.setUpdateDate(lastUpdateDate);
+        userRanking.setUpdateDate();
 
         rankingRepository.save(userRanking);
 
