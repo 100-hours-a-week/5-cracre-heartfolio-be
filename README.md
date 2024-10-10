@@ -13,7 +13,7 @@
 
 <br>
 
-## 프로젝트 소개
+# ❣️ 프로젝트 소개
 
 - 해외주식 모의투자 포트폴리오 서비스
 - 모의투자를 통해 자산의 손실을 최소화하고, 주식에 대한 친밀도를 높이기 위함
@@ -26,7 +26,7 @@
 | --- | --- | --- | --- |
 | <img width="250" alt="image" src="https://github.com/user-attachments/assets/5d466e17-508d-426a-b75b-8a89053159af"> | <img width="250" alt="image" src="https://github.com/user-attachments/assets/0c3a4412-1ac8-49e0-9bb8-ca77d3e66ea2"> | <img width="250" alt="image" src="https://github.com/user-attachments/assets/267a793c-5176-49b4-832a-4433d9e4d7ad"> | <img width="250" alt="image" src="https://github.com/user-attachments/assets/1f998bc4-eeb5-4d5f-9eca-7fa0d2a010cd"> |
 
-| `랭킹 페이지` | `포트폴리오 페이지` | `기부 페이지` | `마이 페이지` |
+| `랭킹 페이지` | `포트폴리오 페이지` | `기부 페이지` | `보유종목 페이지` |
 | --- | --- | --- | --- |
 | <img width="250" alt="image" src="https://github.com/user-attachments/assets/e9e4e4b2-fb69-4aad-83fb-d81bd8f90fed"> | <img width="250" alt="image" src="https://github.com/user-attachments/assets/3a64a107-2433-45cc-a1f9-e1ef41fd5e56"> | <img width="250" alt="image" src="https://github.com/user-attachments/assets/eb9164f6-a3ff-45a3-9d25-0d1bfb64ca2c"> | <img width="250" alt="image" src="https://github.com/user-attachments/assets/3cf5a5af-4fd2-46ae-8bd4-c4223f1e1404"> |
 
@@ -60,7 +60,15 @@ https://github.com/100-hours-a-week/5-team-cracre-heartfolio-fe
 
 https://github.com/100-hours-a-week/5-team-cracre-heartfolio-be
 
-## 구현 내용
+# ❣️ ERD
+
+<img width="1067" alt="image" src="https://github.com/user-attachments/assets/67f67d06-0f7b-4d51-8644-05b2dd42980d">
+
+# ❣️ Architecture
+
+<img width="574" alt="image" src="https://github.com/user-attachments/assets/dac6fd44-011d-4abb-b1bb-4e977c2e47c2">
+
+# ❣️ 구현 내용
 
 ### 유저 관리
 
@@ -84,8 +92,3 @@ https://github.com/100-hours-a-week/5-team-cracre-heartfolio-be
 - 1000원 , 2000원 옵션에 따라 다른 금액 기부 가능
 - 사업자 번호가 없어, 테스트 결제인 관계로 밤 11시 환불
 
-### 어려웠던 점 및 배운점
-
-- 리더로서의 책임감, 일정관리의 소중함을 알게 된 계기
-- API 명세서 업데이트, 소통은 개발자에게 필수적
-- Spring Boot에 대해 많이 공부하며 배움
