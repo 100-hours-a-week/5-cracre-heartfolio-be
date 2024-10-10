@@ -1,8 +1,17 @@
-# 1. 주식 포트폴리오 서비스 (2024.07 ~ 2024.10)
+# ❤️ 기부로 마음을 나누는 모의투자(Heartfolio) ❤️
 
-## 프로젝트명
 
-- **기부로 마음을 공유할 수 있는 모의투자, HeartFolio**
+<h2>주식 포트폴리오 서비스 (2024.07 ~ 2024.10)</h2>
+<br>
+
+## 수행 인원
+
+| <img src="https://avatars.githubusercontent.com/u/167488513?v=4" width="150" height="150"> | <img src="https://avatars.githubusercontent.com/u/160629574?v=4" width="150" height="150"> | <img src="https://avatars.githubusercontent.com/u/123540125?v=4" width="150" height="150"> | <img src="https://avatars.githubusercontent.com/u/69624097?v=4" width="150" height="150"> | <img src="https://avatars.githubusercontent.com/u/84344190?v=4" width="150" height="150"> |
+|:----------------:|:-------------------:|:------------------------------:|:------------------------:|:----------------------------:|
+| Lena.tak (탁예지)  | Wendy.kim (김민지)    |   Alan.lee (이성현)         |   Snorlax.lim (임정현)      |   Robin.jeon (전태웅)           |
+|       PM         |   Frontend          |         Backend            |    Backend                |          Backend               |
+
+<br>
 
 ## 프로젝트 소개
 
@@ -11,46 +20,41 @@
 - 4가지 영역 (교육 / 사회참여 / 문화 / 환경) 에 기부를 통해 캐시 구매 가능
 - 경제 뉴스를 통해 최신 트렌드 확인 가능
 
-### 본인의 역할
+# ❣️ 페이지 소개
 
-- 백엔드 개발
-- 리더
+| `로그인 페이지` | `메인 페이지` | `주식종목 페이지` | `주식상세 페이지` |
+| --- | --- | --- | --- |
+| <img width="250" alt="image" src="https://github.com/user-attachments/assets/5d466e17-508d-426a-b75b-8a89053159af"> | <img width="250" alt="image" src="https://github.com/user-attachments/assets/0c3a4412-1ac8-49e0-9bb8-ca77d3e66ea2"> | <img width="250" alt="image" src="https://github.com/user-attachments/assets/267a793c-5176-49b4-832a-4433d9e4d7ad"> | <img width="250" alt="image" src="https://github.com/user-attachments/assets/1f998bc4-eeb5-4d5f-9eca-7fa0d2a010cd"> |
 
-### 프로젝트 링크 및 홍보 자료
+| `랭킹 페이지` | `포트폴리오 페이지` | `기부 페이지` | `마이 페이지` |
+| --- | --- | --- | --- |
+| <img width="250" alt="image" src="https://github.com/user-attachments/assets/e9e4e4b2-fb69-4aad-83fb-d81bd8f90fed"> | <img width="250" alt="image" src="https://github.com/user-attachments/assets/3a64a107-2433-45cc-a1f9-e1ef41fd5e56"> | <img width="250" alt="image" src="https://github.com/user-attachments/assets/eb9164f6-a3ff-45a3-9d25-0d1bfb64ca2c"> | <img width="250" alt="image" src="https://github.com/user-attachments/assets/3cf5a5af-4fd2-46ae-8bd4-c4223f1e1404"> |
+
+<br>
+
+
+# ❣️ 프로젝트 링크 및 홍보 자료
 
 https://xn--vr-kg0j662g.site/
 
 https://disquiet.io/product/heartfolio-1727164046296
 
-### 성과
 
-- Disquiet 트렌딩 프로덕트 2위
-- 실제 사용자 하루 10명
+# 📐 Front-End
 
-## 수행 인원
+<img alt="React" src ="https://img.shields.io/badge/React-61DAFB.svg?&style=for-the-badge&logo=React&logoColor=black"/> <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"> <img src="https://img.shields.io/badge/fontawesome-339AF0?style=for-the-badge&logo=fontawesome&logoColor=white"> <img src="https://img.shields.io/badge/tailwind Css-06B6D4?style=for-the-badge&logo=tailwindCss&logoColor=white">
 
-| [이름1](https://github.com/이름1) | [이름2](https://github.com/이름2) | [이름3](https://github.com/이름3) | [이름4](https://github.com/이름4) | [이름5](https://github.com/이름5) |
-|:---:|:---:|:---:|:---:|:---:|
-| BE | BE | FE | DevOps | 관리자 |
+<br>
 
+# 📐 Back-End
 
-## 수행 기간
+<img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=Spring-Boot&logoColor=white"> <img alt="Nginx" src ="https://img.shields.io/badge/nginx-009639.svg?&style=for-the-badge&logo=nginx&logoColor=white"/> <img alt="JSON Web Tokens" src ="https://img.shields.io/badge/JSON Web Tokens-000000.svg?&style=for-the-badge&logo=JSON Web Tokens&logoColor=white"/> <img src="https://img.shields.io/badge/mariaDB-003545?style=for-the-badge&logo=mariaDB&logoColor=white"> <img src="https://img.shields.io/badge/redis-FF4438?style=for-the-badge&logo=redis&logoColor=white"> 
+<br>
+<img alt="[Socket.io](http://socket.io/)" src ="https://img.shields.io/badge/Socket.io-010101.svg?&style=for-the-badge&logo=Socket.io&logoColor=white"/> <img alt="GitHub" src ="https://img.shields.io/badge/GitHub-181717.svg?&style=for-the-badge&logo=GitHub&logoColor=white"/>
+<img alt="Amazon EC2" src ="https://img.shields.io/badge/Amazon EC2-FF9900.svg?&style=for-the-badge&logo=Amazon EC2&logoColor=white"/>
+<img alt="social login KakaoTalk" src ="https://img.shields.io/badge/social login KakaoTalk-FFCD00.svg?&style=for-the-badge&logo=KakaoTalk&logoColor=black"/>
 
-- 2024.07 ~ 2024.10 (4개월)
-
-## 개발 환경
-
-<img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> , <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
-
-## 사용 언어
-
-<img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">
-
-## 데이터베이스
-
-<img src="https://img.shields.io/badge/mariaDB-003545?style=for-the-badge&logo=mariaDB&logoColor=white">
-
-<img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
+# ❣️ 깃허브
 
 https://github.com/100-hours-a-week/5-team-cracre-heartfolio-fe
 
